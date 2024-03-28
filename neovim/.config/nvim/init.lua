@@ -351,27 +351,6 @@ vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = 'Go to next diagnos
 vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Open floating diagnostic message' })
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostics list' })
 
-local custom_format = function()
-    if vim.bo.filetype == "templ" then
-        local bufnr = vim.api.nvim_get_current_buf()
-        local filename = vim.api.nvim_buf_get_name(bufnr)
-        local cmd = "templ fmt " .. vim.fn.shellescape(filename)
-
-        vim.fn.jobstart(cmd, {
-            on_exit = function()
-                -- Reload the buffer only if it's still the current buffer
-                if vim.api.nvim_get_current_buf() == bufnr then
-                    vim.cmd('e!')
-                end
-            end,
-        })
-    else
-        vim.lsp.buf.format()
-    end
-end
-
-
-vim.keymap.set('n', '<leader>f', custom_format, { desc = 'Format current buffer' })
 -- [[ Highlight on yank ]]
 -- See `:help vim.highlight.on_yank()`
 local highlight_group = vim.api.nvim_create_augroup('YankHighlight', { clear = true })
@@ -580,10 +559,22 @@ local on_attach = function(_, bufnr)
   end, '[W]orkspace [L]ist Folders')
 
   -- Create a command `:Format` local to the LSP buffer
-  vim.api.nvim_buf_create_user_command(bufnr, 'Format', function(_)
-    vim.lsp.buf.format()
-  end, { desc = 'Format current buffer with LSP' })
+  -- vim.api.nvim_buf_create_user_command(bufnr, 'Format', function(_)
+  --   vim.lsp.buf.format()
+  -- end, { desc = 'Format current buffer with LSP' })
 end
+
+local custom_format = function()
+  local filetype = vim.bo.filetype
+  if filetype == "templ" then
+    vim.lsp.buf.format({ filter = function(client) return client.name == 'templ' end })
+  else
+    vim.lsp.buf.format()
+  end
+end
+
+
+vim.keymap.set('n', '<leader>f', custom_format, { desc = 'Format current buffer' })
 
 -- document existing key chains
 require('which-key').register {
@@ -608,7 +599,12 @@ require('which-key').register({
 require('mason').setup()
 require('mason-lspconfig').setup()
 
-vim.filetype.add({ extension = { templ = "templ" } })
+vim.filetype.add({
+  extension = { templ = "templ" },
+  filename = {
+    ['docker-compose.yaml'] = 'yaml.docker-compose'
+  }
+})
 
 -- Enable the following language servers
 --  Feel free to add/remove any LSPs that you want here. They will automatically be installed.
