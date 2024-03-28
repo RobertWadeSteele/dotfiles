@@ -295,7 +295,9 @@ require('lazy').setup({
 -- NOTE: You can change these options as you wish!
 
 -- Set colorscheme
-vim.cmd.colorscheme "nordic"
+if not vim.g.vscode then
+  vim.cmd.colorscheme "nordic"
+end
 
 -- Set highlight on search
 vim.o.hlsearch = false
