@@ -1,3 +1,7 @@
+if vim.g.vscode then
+  return
+end
+
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
@@ -20,22 +24,55 @@ require('lazy').setup({
 
   'tpope/vim-sleuth',
 
+  {
+    "catppuccin/nvim",
+    config = function()
+      vim.o.termguicolors = true
+      vim.cmd.colorscheme("catppuccin")
+    end,
+    name = "catppuccin",
+    priority = 1000
+  },
+
+  {
+    'numToStr/Navigator.nvim',
+    config = function()
+      require('Navigator').setup(nil)
+    end
+  },
+
+  {
+    'pwntester/octo.nvim',
+    requires = {
+      'nvim-lua/plenary.nvim',
+      'nvim-telescope/telescope.nvim',
+      -- OR 'ibhagwan/fzf-lua',
+      'nvim-tree/nvim-web-devicons',
+    },
+    config = function()
+      require "octo".setup()
+    end
+  },
+
   'ThePrimeagen/harpoon',
 
   {
     "chrishrb/gx.nvim",
     keys = { { "gx", "<cmd>Browse<cr>", mode = { "n", "x" } } },
     cmd = { "Browse" },
-    init = function ()
+    init = function()
       vim.g.netrw_nogx = 1 -- disable netrw gx
     end,
     dependencies = { "nvim-lua/plenary.nvim" },
-    config = true, -- default settings
+    config = true,      -- default settings
     submodules = false, -- not needed, submodules are required only for tests
   },
 
   {
     'stevearc/oil.nvim',
+    config = function()
+      require("oil").setup()
+    end,
     opts = {},
     -- Optional dependencies
     dependencies = { "nvim-tree/nvim-web-devicons" },
@@ -51,17 +88,47 @@ require('lazy').setup({
   {
     'neovim/nvim-lspconfig',
     dependencies = {
-      { 'williamboman/mason.nvim', config = true },
-      'williamboman/mason-lspconfig.nvim',
+      {
+        'williamboman/mason.nvim',
+        opts = {}
+      },
 
-      { 'j-hui/fidget.nvim',       opts = {} },
+      {
+        'williamboman/mason-lspconfig.nvim',
+        opts = {}
+      },
 
-      'folke/neodev.nvim',
+      {
+        'j-hui/fidget.nvim',
+        opts = {}
+      },
+
+      {
+        "folke/lazydev.nvim",
+        ft = "lua", -- only load on lua files
+        opts = {
+          library = {
+            -- See the configuration section for more details
+            -- Load luvit types when the `vim.uv` word is found
+            { path = "luvit-meta/library", words = { "vim%.uv" } },
+          },
+        },
+        dependencies = {
+          { "Bilal2453/luvit-meta", lazy = true }, -- optional `vim.uv` typings
+        }
+      },
     },
   },
 
   {
     'hrsh7th/nvim-cmp',
+    opts = function(_, opts)
+      opts.sources = opts.sources or {}
+      table.insert(opts.sources, {
+        name = "lazydev",
+        group_index = 0,
+      })
+    end,
     dependencies = {
       {
         'L3MON4D3/LuaSnip',
@@ -71,6 +138,7 @@ require('lazy').setup({
           end
           return 'make install_jsregexp'
         end)(),
+        dependencies = { "rafamadriz/friendly-snippets" },
       },
       'saadparwaiz1/cmp_luasnip',
 
@@ -111,7 +179,11 @@ require('lazy').setup({
     opts = {}
   },
 
-  { 'folke/which-key.nvim',  opts = {} },
+  {
+    'folke/which-key.nvim',
+    opts = {}
+  },
+
   {
     'lewis6991/gitsigns.nvim',
     opts = {
@@ -184,18 +256,6 @@ require('lazy').setup({
   },
 
   {
-    'AlexvZyl/nordic.nvim',
-    lazy = false,
-    priority = 1000,
-  },
-  {
-    "folke/tokyonight.nvim",
-    lazy = false,
-    priority = 1000,
-    opts = {},
-  },
-
-  {
     'nvim-lualine/lualine.nvim',
     opts = {
       options = {
@@ -213,7 +273,10 @@ require('lazy').setup({
     opts = {},
   },
 
-  { 'numToStr/Comment.nvim', opts = {} },
+  {
+    'numToStr/Comment.nvim',
+    opts = {}
+  },
 
   {
     'nvim-telescope/telescope.nvim',
@@ -237,22 +300,22 @@ require('lazy').setup({
     },
     build = ':TSUpdate',
   },
-
-  {
-    'nvim-treesitter/playground'
-  }
 }, {})
-
-require('oil').setup()
 
 vim.keymap.set("n", "<leader>hm", require("harpoon.mark").add_file, { desc = "[M]ark file" })
 vim.keymap.set("n", "<leader>ht", require("harpoon.ui").toggle_quick_menu, { desc = "[T]oggle menu" })
 
-vim.keymap.set("n", "<C-h>", require("harpoon.ui").nav_prev)
-vim.keymap.set("n", "<C-l>", require("harpoon.ui").nav_next)
+vim.keymap.set("n", "<M-h>", require("harpoon.ui").nav_prev)
+vim.keymap.set("n", "<M-l>", require("harpoon.ui").nav_next)
 
-vim.keymap.set("n", "<C-j>", "<cmd>:cnext<cr>")
-vim.keymap.set("n", "<C-k>", "<cmd>:cprev<cr>")
+vim.keymap.set("n", "<M-j>", "<cmd>:cnext<cr>")
+vim.keymap.set("n", "<M-k>", "<cmd>:cprev<cr>")
+
+vim.keymap.set("n", "<C-h>", "<cmd>:NavigatorLeft<cr>")
+vim.keymap.set("n", "<C-l>", "<cmd>:NavigatorRight<cr>")
+vim.keymap.set("n", "<C-j>", "<cmd>:NavigatorDown<cr>")
+vim.keymap.set("n", "<C-k>", "<cmd>:NavigatorUp<cr>")
+vim.keymap.set("n", "<C-\\>", "<cmd>:NavigatorPrevious<cr>")
 
 require("dap-python").setup("~/debugpy-venv/bin/python")
 
@@ -263,8 +326,6 @@ vim.o.hlsearch = false
 vim.wo.number = true
 
 vim.o.mouse = 'a'
-
-vim.o.clipboard = 'unnamedplus'
 
 vim.o.breakindent = true
 
@@ -279,9 +340,6 @@ vim.o.updatetime = 250
 vim.o.timeoutlen = 300
 
 vim.o.completeopt = 'menuone,noselect'
-
-vim.o.termguicolors = true
-vim.cmd.colorscheme "tokyonight-night"
 
 vim.o.foldmethod = "indent"
 vim.o.foldopen = "block"
@@ -364,8 +422,9 @@ local function telescope_live_grep_open_files()
     prompt_title = 'Live Grep in Open Files',
   }
 end
+
 vim.keymap.set('n', '<leader>s/', telescope_live_grep_open_files, { desc = '[S]earch [/] in Open Files' })
-vim.keymap.set('n', '<leader>sb', require('telescope.builtin').buffers, { desc = '[ ] Find existing buffers' })
+vim.keymap.set('n', '<leader>sb', require('telescope.builtin').buffers, { desc = '[S]earch [B]uffers' })
 vim.keymap.set('n', '<leader>sS', require('telescope.builtin').builtin, { desc = '[S]earch [S]elect Telescope' })
 vim.keymap.set('n', '<leader>gf', require('telescope.builtin').git_files, { desc = 'Search [G]it [F]iles' })
 vim.keymap.set('n', '<leader>sf', require('telescope.builtin').find_files, { desc = '[S]earch [F]iles' })
@@ -378,7 +437,7 @@ vim.keymap.set('n', '<leader>sr', require('telescope.builtin').resume, { desc = 
 
 vim.defer_fn(function()
   require('nvim-treesitter.configs').setup {
-    ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'javascript', 'typescript', 'vimdoc', 'vim', 'bash' },
+    ensure_installed = { 'c_sharp', 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'javascript', 'typescript', 'vimdoc', 'vim', 'bash' },
 
     auto_install = false,
     sync_install = false,
@@ -481,24 +540,21 @@ end
 
 vim.keymap.set('n', '<leader>f', custom_format, { desc = 'Format current buffer' })
 
-require('which-key').register {
-  ['<leader>c'] = { name = '[C]ode', _ = 'which_key_ignore' },
-  ['<leader>d'] = { name = '[D]ebugger', _ = 'which_key_ignore' },
-  ['<leader>g'] = { name = '[G]it', _ = 'which_key_ignore' },
-  -- ['<leader>h'] = { name = 'Git [H]unk', _ = 'which_key_ignore' },
-  ['<leader>h'] = { name = '[H]arpoon', _ = 'which_key_ignore' },
-  ['<leader>r'] = { name = '[R]ename', _ = 'which_key_ignore' },
-  ['<leader>s'] = { name = '[S]earch', _ = 'which_key_ignore' },
-  ['<leader>t'] = { name = '[T]oggle', _ = 'which_key_ignore' },
-  ['<leader>w'] = { name = '[W]orkspace', _ = 'which_key_ignore' },
-}
-require('which-key').register({
-  ['<leader>'] = { name = 'VISUAL <leader>' },
-  ['<leader>h'] = { 'Git [H]unk' },
-}, { mode = 'v' })
+require('which-key').add({
+  { "<leader>c", group = "[C]ode" },
+  { "<leader>d", group = "[D]ebugger" },
+  { "<leader>g", group = "[G]it" },
+  { "<leader>h", group = "[H]arpoon" },
+  { "<leader>r", group = "[R]ename" },
+  { "<leader>s", group = "[S]earch" },
+  { "<leader>t", group = "[T]oggle" },
+  { "<leader>w", group = "[W]orkspace" },
+})
 
-require('mason').setup()
-require('mason-lspconfig').setup()
+require('which-key').add({
+  { '<leader>',  desc = 'VISUAL <leader>', mode = 'v' },
+  { '<leader>h', desc = 'Git [H]unk',      mode = 'v' }
+})
 
 vim.filetype.add({
   extension = { templ = "templ" },
@@ -517,6 +573,8 @@ local servers = {
   tsserver = {},
   html = { filetypes = { 'html', 'twig', 'hbs', 'templ' } },
   tailwindcss = {},
+  csharp_ls = {},
+  omnisharp = {},
 
   lua_ls = {
     Lua = {
@@ -525,8 +583,6 @@ local servers = {
     },
   },
 }
-
-require('neodev').setup()
 
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
@@ -561,7 +617,6 @@ cmp.setup {
   },
   completion = {
     completeopt = 'menu,menuone,noinsert,noselect',
-    -- completeopt = 'menu,menuone,noselect',
   },
   preselect = cmp.PreselectMode.None,
   mapping = cmp.mapping.preset.insert {
@@ -574,24 +629,6 @@ cmp.setup {
       behavior = cmp.ConfirmBehavior.Replace,
       select = true,
     },
-    -- ['<Tab>'] = cmp.mapping(function(fallback)
-    --   if cmp.visible() then
-    --     cmp.select_next_item()
-    --   elseif luasnip.expand_or_locally_jumpable() then
-    --     luasnip.expand_or_jump()
-    --   else
-    --     fallback()
-    --   end
-    -- end, { 'i', 's' }),
-    -- ['<S-Tab>'] = cmp.mapping(function(fallback)
-    --   if cmp.visible() then
-    --     cmp.select_prev_item()
-    --   elseif luasnip.locally_jumpable(-1) then
-    --     luasnip.jump(-1)
-    --   else
-    --     fallback()
-    --   end
-    -- end, { 'i', 's' }),
   },
   sources = {
     { name = 'nvim_lsp' },
