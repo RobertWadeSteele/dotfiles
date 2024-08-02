@@ -97,4 +97,6 @@ _dotnet_zsh_complete()
 
 compdef _dotnet_zsh_complete dotnet
 
-eval "$(direnv hook zsh)"
+if command -v direnv &> /dev/null; then
+	eval "$(direnv hook zsh)"
+fi
