@@ -41,6 +41,14 @@ require('lazy').setup({
     end
   },
 
+  -- {
+  --   'jmbuhr/otter.nvim',
+  --   dependencies = {
+  --     'nvim-treesitter/nvim-treesitter',
+  --   },
+  --   opts = {},
+  -- },
+
   {
     'pwntester/octo.nvim',
     requires = {
@@ -49,9 +57,11 @@ require('lazy').setup({
       -- OR 'ibhagwan/fzf-lua',
       'nvim-tree/nvim-web-devicons',
     },
-    config = function()
-      require "octo".setup()
-    end
+    opts = {
+      suppress_missing_scope = {
+        projects_v2 = true,
+      }
+    },
   },
 
   'ThePrimeagen/harpoon',
@@ -163,6 +173,14 @@ require('lazy').setup({
 
   {
     'mfussenegger/nvim-dap',
+  },
+
+  {
+    "rcarriga/nvim-dap-ui",
+    dependencies = {
+      "mfussenegger/nvim-dap",
+      "nvim-neotest/nvim-nio"
+    }
   },
 
   {
@@ -301,6 +319,10 @@ require('lazy').setup({
     build = ':TSUpdate',
   },
 }, {})
+
+vim.keymap.set({"n", "v"}, "<leader>y", "\"+y")
+vim.keymap.set({"n", "v"}, "<leader>d", "\"+d")
+vim.keymap.set({"n", "v"}, "<leader>c", "\"+c")
 
 vim.keymap.set("n", "<leader>hm", require("harpoon.mark").add_file, { desc = "[M]ark file" })
 vim.keymap.set("n", "<leader>ht", require("harpoon.ui").toggle_quick_menu, { desc = "[T]oggle menu" })

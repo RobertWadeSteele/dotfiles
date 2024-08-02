@@ -1,0 +1,408 @@
+# echo zprofile
+export SSH_AUTH_SOCK=~/Library/Group\ Containers/2BUA8C4S2C.com.1password/t/agent.sock
+
+export PATH="$PATH:/Users/robertsteele/.dotnet/tools"
+
+napp-mongo-uri ()
+{
+  gcloud secrets versions access latest --secret napp-mongodb-credentials | jq .connection_string
+}
+
+unwired-mongo-uri ()
+{
+  gcloud secrets versions access latest --secret unwired-mongodb-credentials
+}
+
+
+COMPLETION_PATH="$HOME/.zfunc"
+mkdir -p $COMPLETION_PATH
+fpath=($COMPLETION_PATH $fpath)
+
+if command -v starship &> /dev/null; then
+  starship completions zsh > "$COMPLETION_PATH/_starship"
+fi
+
+if command -v k9s &> /dev/null; then
+  k9s completion zsh > "$COMPLETION_PATH/_k9s"
+fi
+
+if command -v cobra-cli &> /dev/null; then
+  cobra-cli completion zsh > "$COMPLETION_PATH/_cobra-cli"
+fi
+
+if command -v kubectl &> /dev/null; then
+  kubectl completion zsh > "$COMPLETION_PATH/_kubectl"
+fi
+
+if command -v op &> /dev/null; then
+  op completion zsh > "$COMPLETION_PATH/_op"
+fi
+
+if command -v pdm &> /dev/null; then
+  pdm completion zsh > "$COMPLETION_PATH/_pdm"
+  pdm() {
+    local command=$1
+
+    if [[ "$command" == "shell" ]]; then
+        eval $(pdm venv activate)
+    else
+        command pdm $@
+    fi
+  }
+fi
+
+if command -v go &> /dev/null; then
+  PATH="${PATH}:$(go env GOPATH)/bin"
+fi
+
+
+# Setting PATH for Python 3.9
+# The original version is saved in .zprofile.pysave
+# PATH="/Library/Frameworks/Python.framework/Versions/3.9/bin:${PATH}"
+# export PATH
+
+# Set PATH, MANPATH, etc., for Homebrew.
+eval "$(/opt/homebrew/bin/brew shellenv)"
+
+# Setting PATH for Python 3.7
+# The original version is saved in .zprofile.pysave
+# PATH="/Library/Frameworks/Python.framework/Versions/3.7/bin:${PATH}"
+# export PATH
+
+# Setting PATH for Python 3.11
+# The original version is saved in .zprofile.pysave
+# PATH="/Library/Frameworks/Python.framework/Versions/3.11/bin:${PATH}"
+# export PATH
+
+# Setting PATH for Python 3.10
+# The original version is saved in .zprofile.pysave
+PATH="/Library/Frameworks/Python.framework/Versions/3.10/bin:${PATH}"
+
+# PATH="${HOME}/go/bin:${PATH}"
+
+PATH="${HOME}/.local/bin:$PATH"
+
+export PATH
+
+# setup pyenv
+# export PYENV_ROOT="$HOME/.pyenv"
+# command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
+# eval "$(pyenv init -)"
+
+# Prints out usage to user.
+function usage_help() {
+  echo "Usage: $0 project cluster"
+  echo "project:
+                up : prod-unwired-263919, uq : unwired-qa, ud : dev-unwired-264518
+                lp : prod-local-275012, lq : prod-local-275012, ld : dev-local-274820
+                ap : prod-acp, aq : qa-acp, ad : dev-acp
+                np : prod-napp, nq : qa-napp, nd : dev-napp"
+  echo " "
+  echo "cluster:
+                low: unwired-optimizer-low, high : unwired-optimizer-high, ui : unwired-ui
+                group : unwired-group-optimizer, pgroup : preempt-unwired-group-optimizer, popt0 : preempt-optimizer-0
+                popt1 : preempt-optimizer-1, opt0 : unwired-optimizer-0, opt1 : unwired-optimizer-1
+                opt2 : unwired-optimizer-2, ui : local-ui, work : workload, ui : acp-ui, ui : qa-acp-ui, ui : dev-acp-ui
+                ui: dev-unwired-ui, ui : qa-unwired-ui, ui : qa-local-ui, ui : dev-local-ui	"
+}
+
+# gk9s: shortcut to run k9s by first connecting to cluster by short cut aliases names. if you need to know usage, run gk9s
+function gk9s() {
+
+        if [[ $# -ne 2 ]]; then
+          echo "Error: Two arguments are required! you passed $# arguements!!"
+          usage_help
+          return
+        fi
+        project=$1
+        cluster=$2
+
+        if [[ $project == "up" ]]; then
+                project="prod-unwired-263919"
+                if [[ $cluster == "low" ]]; then
+                  cluster="unwired-optimizer-low"
+                elif [[ $cluster == "high" ]]; then
+                  cluster="unwired-optimizer-high"
+                elif [[ $cluster == "ui" ]]; then
+                  cluster="unwired-ui"
+                elif [[ $cluster == "group" ]]; then
+                  cluster="unwired-group-optimizer"
+                elif [[ $cluster == "pgroup" ]]; then
+                  cluster="preempt-unwired-group-optimizer"
+                elif [[ $cluster == "popt0" ]]; then
+                  cluster="preempt-optimizer-0"
+                elif [[ $cluster == "popt1" ]]; then
+                  cluster="preempt-optimizer-1"
+                elif [[ $cluster == "opt0" ]]; then
+                  cluster="unwired-optimizer-0"
+                elif [[ $cluster == "opt1" ]]; then
+                  cluster="unwired-optimizer-1"
+                elif [[ $cluster == "opt2" ]]; then
+                  cluster="unwired-optimizer-2"
+		            elif [[ $cluster == "nsi" ]]; then
+                  cluster="nsi-nti"
+                fi
+        elif [[ $project == "uq" ]]; then
+                project="qa-unwired"
+                if [[ $cluster == "low" ]]; then
+                  cluster="unwired-optimizer-low"
+                elif [[ $cluster == "high" ]]; then
+                  cluster="unwired-optimizer-high"
+                elif [[ $cluster == "ui" ]]; then
+                  cluster="qa-unwired-ui"
+                elif [[ $cluster == "group" ]]; then
+                  cluster="unwired-group-optimizer"
+                elif [[ $cluster == "pgroup" ]]; then
+                  cluster="preempt-unwired-group-optimizer"
+                elif [[ $cluster == "popt0" ]]; then
+                  cluster="preempt-optimizer-0"
+                elif [[ $cluster == "popt1" ]]; then
+                  cluster="preempt-optimizer-1"
+                elif [[ $cluster == "opt0" ]]; then
+                  cluster="unwired-optimizer-0"
+                elif [[ $cluster == "opt1" ]]; then
+                  cluster="unwired-optimizer-1"
+                elif [[ $cluster == "opt2" ]]; then
+                  cluster="unwired-optimizer-2"
+		            elif [[ $cluster == "nsi" ]]; then
+                  cluster="nsi-nti"
+                fi
+        elif [[ $project == "ud" ]]; then
+                project="dev-unwired-264518"
+               if [[ $cluster == "low" ]]; then
+                  cluster="unwired-optimizer-low"
+                elif [[ $cluster == "high" ]]; then
+                  cluster="unwired-optimizer-high"
+                elif [[ $cluster == "ui" ]]; then
+                  cluster="dev-unwired-ui"
+                elif [[ $cluster == "group" ]]; then
+                  cluster="unwired-group-optimizer"
+                elif [[ $cluster == "pgroup" ]]; then
+                  cluster="preempt-unwired-group-optimizer"
+                elif [[ $cluster == "popt0" ]]; then
+                  cluster="preempt-optimizer-0"
+                elif [[ $cluster == "popt1" ]]; then
+                  cluster="preempt-optimizer-1"
+                elif [[ $cluster == "opt0" ]]; then
+                  cluster="unwired-optimizer-0"
+                elif [[ $cluster == "opt1" ]]; then
+                  cluster="unwired-optimizer-1"
+		            elif [[ $cluster == "nsi" ]]; then
+                  cluster="nsi-nti"
+                fi
+        elif [[ $project == "lp" ]]; then
+                project="prod-local-275012"
+                if [[ $cluster == "work" ]]; then
+                  cluster="workload"
+                elif [[ $cluster == "ui" ]]; then
+                  cluster="local-ui"
+                fi
+        elif [[ $project == "lq" ]]; then
+                project="qa-local-321014"
+                if [[ $cluster == "work" ]]; then
+                  cluster="workload"
+                elif [[ $cluster == "ui" ]]; then
+                  cluster="qa-local-ui"
+                fi
+        elif [[ $project == "ld" ]]; then
+                project="dev-local-274820"
+                if [[ $cluster == "work" ]]; then
+                  cluster="workload"
+                elif [[ $cluster == "ui" ]]; then
+                  cluster="dev-local-ui"
+                fi
+        elif [[ $project == "ap" ]]; then
+                project="prod-acp"
+                if [[ $cluster == "ui" ]]; then
+                  cluster="acp-ui"
+                fi
+        elif [[ $project == "aq" ]]; then
+                project="qa-acp"
+                if [[ $cluster == "ui" ]]; then
+                  cluster="qa-acp-ui"
+                fi
+        elif [[ $project == "ad" ]]; then
+                project="dev-acp"
+              if [[ $cluster == "ui" ]]; then
+                  cluster="dev-acp-ui"
+              fi
+        elif [[ $project == "np" ]]; then
+                project="prod-napp"
+                if [[ $cluster == "ui" ]]; then
+                  cluster="napp-ui"
+                fi
+        elif [[ $project == "nq" ]]; then
+                project="qa-napp"
+                if [[ $cluster == "ui" ]]; then
+                  cluster="qa-napp-ui"
+                fi
+        elif [[ $project == "nd" ]]; then
+                project="dev-napp"
+              if [[ $cluster == "ui" ]]; then
+                  cluster="dev-napp-ui"
+              fi
+        fi
+
+	echo $cluster
+	echo $project
+        gcloud container clusters get-credentials $cluster --region us-east1 --project $project
+        k9s
+}
+
+# ************************************** Unwired unwired-optimizer-low/unwired-optimizer-high clusters auto connect to all clusters in same terminal window ********************************
+# ropt: shortcut to run gk9s, for all clusters for optimization apps. This command will open all clusters in new tabs on the same terminal For the prod unwired
+function rclassic() {
+#!/bin/sh
+osascript -e 'tell application "Terminal" to activate' \
+  -e 'tell application "System Events" to tell process "Terminal" to keystroke "t" using command down' \
+  -e 'tell application "Terminal" to do script " gk9s up high" in selected tab of the front window'
+sleep 10
+osascript -e 'tell application "Terminal" to activate' \
+  -e 'tell application "System Events" to tell process "Terminal" to keystroke "t" using command down' \
+  -e 'tell application "Terminal" to do script " gk9s up low" in selected tab of the front window'
+}
+
+# rqopt: shortcut to run gk9s, for all clusters for optimization apps. This command will open all clusters in new tabs on the same terminal For the QA unwired
+function rqclassic() {
+#!/bin/sh
+osascript -e 'tell application "Terminal" to activate' \
+  -e 'tell application "System Events" to tell process "Terminal" to keystroke "t" using command down' \
+  -e 'tell application "Terminal" to do script " gk9s uq high" in selected tab of the front window'
+sleep 10
+osascript -e 'tell application "Terminal" to activate' \
+  -e 'tell application "System Events" to tell process "Terminal" to keystroke "t" using command down' \
+  -e 'tell application "Terminal" to do script " gk9s uq low" in selected tab of the front window'
+
+}
+
+# rdopt: shortcut to run gk9s, for all clusters for optimization apps. This command will open all clusters in new tabs on the same terminal For the DEV unwired
+function rdclassic() {
+#!/bin/sh
+osascript -e 'tell application "Terminal" to activate' \
+  -e 'tell application "System Events" to tell process "Terminal" to keystroke "t" using command down' \
+  -e 'tell application "Terminal" to do script " gk9s ud high" in selected tab of the front window'
+sleep 10
+osascript -e 'tell application "Terminal" to activate' \
+  -e 'tell application "System Events" to tell process "Terminal" to keystroke "t" using command down' \
+  -e 'tell application "Terminal" to do script " gk9s ud low" in selected tab of the front window'
+
+}
+
+
+
+# ************************************** Unwired Optimization clusters auto connect to all clusters in same terminal window ********************************
+# ropt: shortcut to run gk9s, for all clusters for optimization apps. This command will open all clusters in new tabs on the same terminal For the prod unwired
+function ropt() {
+#!/bin/sh
+osascript -e 'tell application "Terminal" to activate' \
+  -e 'tell application "System Events" to tell process "Terminal" to keystroke "t" using command down' \
+  -e 'tell application "Terminal" to do script " gk9s up opt0" in selected tab of the front window'
+sleep 10
+osascript -e 'tell application "Terminal" to activate' \
+  -e 'tell application "System Events" to tell process "Terminal" to keystroke "t" using command down' \
+  -e 'tell application "Terminal" to do script " gk9s up opt1" in selected tab of the front window'
+sleep 10
+osascript -e 'tell application "Terminal" to activate' \
+  -e 'tell application "System Events" to tell process "Terminal" to keystroke "t" using command down' \
+  -e 'tell application "Terminal" to do script " gk9s up opt2" in selected tab of the front window'
+  sleep 10
+osascript -e 'tell application "Terminal" to activate' \
+  -e 'tell application "System Events" to tell process "Terminal" to keystroke "t" using command down' \
+  -e 'tell application "Terminal" to do script " gk9s up popt0" in selected tab of the front window'
+    sleep 10
+osascript -e 'tell application "Terminal" to activate' \
+  -e 'tell application "System Events" to tell process "Terminal" to keystroke "t" using command down' \
+  -e 'tell application "Terminal" to do script " gk9s up popt1" in selected tab of the front window'
+}
+
+# rqopt: shortcut to run gk9s, for all clusters for optimization apps. This command will open all clusters in new tabs on the same terminal For the QA unwired
+function rqopt() {
+#!/bin/sh
+osascript -e 'tell application "Terminal" to activate' \
+  -e 'tell application "System Events" to tell process "Terminal" to keystroke "t" using command down' \
+  -e 'tell application "Terminal" to do script " gk9s uq opt0" in selected tab of the front window'
+sleep 10
+osascript -e 'tell application "Terminal" to activate' \
+  -e 'tell application "System Events" to tell process "Terminal" to keystroke "t" using command down' \
+  -e 'tell application "Terminal" to do script " gk9s uq opt1" in selected tab of the front window'
+sleep 10
+osascript -e 'tell application "Terminal" to activate' \
+  -e 'tell application "System Events" to tell process "Terminal" to keystroke "t" using command down' \
+  -e 'tell application "Terminal" to do script " gk9s uq opt2" in selected tab of the front window'
+  osascript -e 'tell application "Terminal" to activate' \
+  -e 'tell application "System Events" to tell process "Terminal" to keystroke "t" using command down' \
+  -e 'tell application "Terminal" to do script " gk9s uq popt0" in selected tab of the front window'
+    sleep 10
+osascript -e 'tell application "Terminal" to activate' \
+  -e 'tell application "System Events" to tell process "Terminal" to keystroke "t" using command down' \
+  -e 'tell application "Terminal" to do script " gk9s uq popt1" in selected tab of the front window'
+}
+
+# rdopt: shortcut to run gk9s, for all clusters for optimization apps. This command will open all clusters in new tabs on the same terminal For the DEV unwired
+function rdopt() {
+#!/bin/sh
+osascript -e 'tell application "Terminal" to activate' \
+  -e 'tell application "System Events" to tell process "Terminal" to keystroke "t" using command down' \
+  -e 'tell application "Terminal" to do script " gk9s ud opt0" in selected tab of the front window'
+sleep 10
+osascript -e 'tell application "Terminal" to activate' \
+  -e 'tell application "System Events" to tell process "Terminal" to keystroke "t" using command down' \
+  -e 'tell application "Terminal" to do script " gk9s ud opt1" in selected tab of the front window'
+sleep 10
+osascript -e 'tell application "Terminal" to activate' \
+  -e 'tell application "System Events" to tell process "Terminal" to keystroke "t" using command down' \
+  -e 'tell application "Terminal" to do script " gk9s ud popt0" in selected tab of the front window'
+    sleep 10
+osascript -e 'tell application "Terminal" to activate' \
+  -e 'tell application "System Events" to tell process "Terminal" to keystroke "t" using command down' \
+  -e 'tell application "Terminal" to do script " gk9s ud popt1" in selected tab of the front window'
+}
+
+
+
+# ************************************** Unwired group clusters auto connect to all clusters in same terminal window ********************************
+# ropt: shortcut to run gk9s, for all clusters for optimization apps. This command will open all clusters in new tabs on the same terminal For the prod unwired
+function rgroup() {
+#!/bin/sh
+osascript -e 'tell application "Terminal" to activate' \
+  -e 'tell application "System Events" to tell process "Terminal" to keystroke "t" using command down' \
+  -e 'tell application "Terminal" to do script " gk9s up group" in selected tab of the front window'
+sleep 10
+osascript -e 'tell application "Terminal" to activate' \
+  -e 'tell application "System Events" to tell process "Terminal" to keystroke "t" using command down' \
+  -e 'tell application "Terminal" to do script " gk9s up pgroup" in selected tab of the front window'
+}
+
+# rqopt: shortcut to run gk9s, for all clusters for optimization apps. This command will open all clusters in new tabs on the same terminal For the QA unwired
+function rqgroup() {
+#!/bin/sh
+osascript -e 'tell application "Terminal" to activate' \
+  -e 'tell application "System Events" to tell process "Terminal" to keystroke "t" using command down' \
+  -e 'tell application "Terminal" to do script " gk9s uq group" in selected tab of the front window'
+sleep 10
+osascript -e 'tell application "Terminal" to activate' \
+  -e 'tell application "System Events" to tell process "Terminal" to keystroke "t" using command down' \
+  -e 'tell application "Terminal" to do script " gk9s uq pgroup" in selected tab of the front window'
+
+}
+
+# rdopt: shortcut to run gk9s, for all clusters for optimization apps. This command will open all clusters in new tabs on the same terminal For the DEV unwired
+function rdgroup() {
+#!/bin/sh
+osascript -e 'tell application "Terminal" to activate' \
+  -e 'tell application "System Events" to tell process "Terminal" to keystroke "t" using command down' \
+  -e 'tell application "Terminal" to do script " gk9s ud group" in selected tab of the front window'
+sleep 10
+osascript -e 'tell application "Terminal" to activate' \
+  -e 'tell application "System Events" to tell process "Terminal" to keystroke "t" using command down' \
+  -e 'tell application "Terminal" to do script " gk9s ud pgroup" in selected tab of the front window'
+
+}
+
+
+# dk9s: force kill all k9s running processes
+function dk9s() {
+#!/bin/sh
+pkill -9 k9s
+}
+. "$HOME/.cargo/env"
