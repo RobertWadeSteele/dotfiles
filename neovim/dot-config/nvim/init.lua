@@ -18,6 +18,14 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
+local function toggleDiffview(args)
+  if require("diffview.lib").get_current_view() then
+    require("diffview").close()
+  else
+    require("diffview").open(args)
+  end
+end
+
 require('lazy').setup({
   'tpope/vim-fugitive',
   'tpope/vim-rhubarb',
@@ -36,9 +44,31 @@ require('lazy').setup({
 
   {
     'numToStr/Navigator.nvim',
-    config = function()
-      require('Navigator').setup(nil)
-    end
+    opts = {},
+    keys = {
+      { "<C-h>",  "<cmd>:NavigatorLeft<cr>" },
+      { "<C-l>",  "<cmd>:NavigatorRight<cr>" },
+      { "<C-j>",  "<cmd>:NavigatorDown<cr>" },
+      { "<C-k>",  "<cmd>:NavigatorUp<cr>" },
+      { "<C-\\>", "<cmd>:NavigatorPrevious<cr>" },
+    }
+  },
+
+  {
+    "sindrets/diffview.nvim",
+    keys = {
+      {
+        "<leader>od",
+        function() toggleDiffview({}) end,
+        desc = "[O]pen Diffview"
+      },
+      {
+        "<leader>oD",
+        function() toggleDiffview({ "origin/HEAD...HEAD", "--imply-local" }) end,
+        desc = "[O]pen PR Diffview"
+      }
+    },
+    lazy = true
   },
 
   -- {
@@ -62,9 +92,45 @@ require('lazy').setup({
         projects_v2 = true,
       }
     },
+    keys = {
+      { "<leader>Ors", ":Octo review start<CR>", desc = "[S]tart Review"},
+      { "<leader>Ord", ":Octo review discard<CR>", desc = "[D]iscard Review"}
+    },
+    -- config = function()
+    --   require('which-key').add({
+    --     { "<leader>O",  group = "[O]cto" },
+    --     { "<leader>Or", group = "[R]eview" }
+    --   })
+    --   vim.keymap.set("n", "<leader>Ors", ":Octo review start<cr>", { desc = "[S]tart" })
+    --   vim.keymap.set("n", "<leader>Ord", ":Octo review discard<cr>", { desc = "[D]iscard" })
+    --
+    --   require("octo").setup({
+    --     suppress_missing_scope = {
+    --       projects_v2 = true,
+    --     }
+    --   })
+    -- end
   },
 
-  'ThePrimeagen/harpoon',
+  {
+    'ThePrimeagen/harpoon',
+    opts = {},
+    keys = {
+      {"<leader>m", function() require("harpoon.mark").add_file() end, desc = "[M]ark file"},
+      {"<leader>oh", function() require("harpoon.ui").toggle_quick_menu() end, desc = "[O]pen [H]arpoon"},
+      {"<M-l>", function() require("harpoon.ui").nav_prev() end, desc = "[H]arpoon Next"},
+      {"<M-l>", function() require("harpoon.ui").nav_next() end, desc = "[H]arpoon Prev"},
+    },
+    -- config = function()
+    --   vim.keymap.set("n", "<leader>m", require("harpoon.mark").add_file, { desc = "[M]ark file" })
+    --   vim.keymap.set("n", "<leader>oh", require("harpoon.ui").toggle_quick_menu, { desc = "[O]pen [H]arpoon" })
+    --
+    --   -- vim.keymap.set("n", "<M-h>", require("harpoon.ui").nav_prev)
+    --   -- vim.keymap.set("n", "<M-l>", require("harpoon.ui").nav_next)
+    --   vim.keymap.set()
+    --   vim.keymap.set("n", "]h", require("harpoon.ui").nav_next, { desc = "[H]arpoon Prev" })
+    -- end
+  },
 
   {
     "chrishrb/gx.nvim",
@@ -82,6 +148,7 @@ require('lazy').setup({
     'stevearc/oil.nvim',
     config = function()
       require("oil").setup()
+      vim.keymap.set("n", "-", ":Oil<CR>", { desc = "oil" })
     end,
     opts = {},
     -- Optional dependencies
@@ -168,11 +235,48 @@ require('lazy').setup({
   {
     "jiaoshijie/undotree",
     dependencies = "nvim-lua/plenary.nvim",
-    config = true,
+    config = function()
+      vim.keymap.set('n', '<leader>tu', require('undotree').toggle, { desc = 'Toggle [U]ndotree' })
+      require('undotree').setup()
+    end
   },
 
   {
     'mfussenegger/nvim-dap',
+    config = function()
+      local dap = require('dap')
+
+      vim.keymap.set('n', '<leader>rc', dap.continue, { desc = '[C]ontinue' })
+      vim.keymap.set('n', '<leader>rb', dap.toggle_breakpoint, { desc = '[B]reakpoint' })
+      vim.keymap.set('n', '<leader>rB', function()
+        local condition = vim.fn.input("Condition: ")
+        local hit_count = vim.fn.input("Hit count: ")
+        local log_message = vim.fn.input("Log message: ")
+        condition = condition ~= "" and condition or nil
+        hit_count = hit_count ~= "" and hit_count or nil
+        log_message = log_message ~= "" and log_message or nil
+        print(condition)
+        print(hit_count)
+        print(log_message)
+        dap.set_breakpoint(condition, hit_count, log_message)
+      end
+      , { desc = 'Conditional [B]reakpoint' })
+      vim.keymap.set('n', '<leader>ro', dap.step_over, { desc = 'Step [O]ver' })
+      vim.keymap.set('n', '<leader>ri', dap.step_into, { desc = 'Step [I]nto' })
+      vim.keymap.set('n', '<leader>rO', dap.step_out, { desc = 'Step [O]ut' })
+      vim.keymap.set('n', '<leader>rT', dap.terminate, { desc = '[T]erminate' })
+
+      vim.api.nvim_set_hl(0, 'debug', {
+        bg = '#FFFFFF',
+        fg = '#000000'
+      })
+      -- vim.fn.sign_define('DapBreakpoint', { text = '🛑', texthl = 'debug', linehl = '', numhl = '' })
+      vim.fn.sign_define('DapBreakpoint', { text = 'B', texthl = 'debug', linehl = '', numhl = '' })
+      vim.fn.sign_define('DapBreakpointCondition', { text = 'C', texthl = 'debug', linehl = '', numhl = '' })
+      vim.fn.sign_define('DapLogPoint', { text = 'L', texthl = 'debug', linehl = '', numhl = '' })
+      vim.fn.sign_define('DapStopped', { text = '→', texthl = 'debug', linehl = '', numhl = '' })
+      vim.fn.sign_define('DapBreakpointRejected', { text = 'R', texthl = 'debug', linehl = '', numhl = '' })
+    end
   },
 
   {
@@ -180,14 +284,65 @@ require('lazy').setup({
     dependencies = {
       "mfussenegger/nvim-dap",
       "nvim-neotest/nvim-nio"
-    }
+    },
+    config = function()
+      local dap = require('dap')
+      local dapui = require("dapui")
+      vim.keymap.set('n', '<leader>tw', dapui.toggle, { desc = 'DAP UI' })
+      dapui.setup()
+      dap.listeners.before.attach.dapui_config = function()
+        dapui.open()
+      end
+      dap.listeners.before.launch.dapui_config = function()
+        dapui.open()
+      end
+    end
   },
 
   {
     'mfussenegger/nvim-dap-python',
     dependencies = {
       'mfussenegger/nvim-dap',
-    }
+    },
+    event = "BufRead *.py",
+    config = function()
+      local venv_path = os.getenv("VIRTUAL_ENV")
+      if venv_path == nil then
+        print("no active virtual environment - unable to activate python dap")
+        return
+      end
+
+      local python_path = venv_path .. '/bin/python'
+
+      local enrich_config = function(config, on_config)
+        if not config.args then
+          local args_string = vim.fn.input('Arguments: ')
+          config.args = vim.split(args_string, " +")
+        end
+        if not config.pythonPath and not config.python then
+          config.pythonPath = python_path
+        end
+        on_config(config)
+      end
+
+      local dap_python = require("dap-python")
+
+      vim.api.nvim_create_autocmd({ 'BufEnter' }, {
+        pattern = { "*.py" },
+        callback = function(event)
+          require('which-key').add({
+            { "<leader>r", group = "[R]un" },
+            { "<leader>t", group = "[T]est" },
+          })
+          vim.keymap.set({ 'v' }, '<leader>rv', dap_python.debug_selection,
+            { buffer = event.buf, desc = 'debug selection' })
+          vim.keymap.set({ 'n' }, '<leader>tm', dap_python.test_method, { buffer = event.buf, desc = 'test method' })
+          vim.keymap.set({ 'n' }, '<leader>tc', dap_python.test_class, { buffer = event.buf, desc = 'test class' })
+        end
+      })
+
+      require("dap-python").setup(python_path, { include_configs = false, enrich_config = enrich_config })
+    end
   },
 
   {
@@ -265,8 +420,8 @@ require('lazy').setup({
           gs.diffthis '~'
         end, { desc = 'git diff against last commit' })
 
-        map('n', '<leader>tb', gs.toggle_current_line_blame, { desc = 'toggle git blame line' })
-        map('n', '<leader>td', gs.toggle_deleted, { desc = 'toggle git show deleted' })
+        map('n', '<leader>tgb', gs.toggle_current_line_blame, { desc = 'toggle git blame line' })
+        map('n', '<leader>tgd', gs.toggle_deleted, { desc = 'toggle git show deleted' })
 
         map({ 'o', 'x' }, 'ih', ':<C-U>Gitsigns select_hunk<CR>', { desc = 'select git hunk' })
       end,
@@ -309,6 +464,13 @@ require('lazy').setup({
         end,
       },
     },
+    opts = {
+      pickers = {
+        find_files = {
+          push_tagstack_on_edit = true
+        }
+      }
+    }
   },
 
   {
@@ -320,30 +482,28 @@ require('lazy').setup({
   },
 }, {})
 
-vim.keymap.set({"n", "v"}, "<leader>y", "\"+y")
-vim.keymap.set({"n", "v"}, "<leader>d", "\"+d")
-vim.keymap.set({"n", "v"}, "<leader>c", "\"+c")
+vim.keymap.set({ "n", "v" }, "<leader>y", "\"+y", { desc = "yank to clipboard" })
+vim.keymap.set({ "n", "v" }, "<leader>d", "\"+d", { desc = "delete to clipboard" })
+vim.keymap.set({ "n", "v" }, "<leader>c", "\"+c", { desc = "copy to clipboard" })
+vim.keymap.set({ "n", "v" }, "<leader>p", "\"+p", { desc = "paste from clipboard" })
 
-vim.keymap.set("n", "<leader>hm", require("harpoon.mark").add_file, { desc = "[M]ark file" })
-vim.keymap.set("n", "<leader>ht", require("harpoon.ui").toggle_quick_menu, { desc = "[T]oggle menu" })
+-- vim.keymap.set("n", "<M-j>", "<cmd>:cnext<cr>")
+-- vim.keymap.set("n", "<M-k>", "<cmd>:cprev<cr>")
+vim.keymap.set("n", "]q", "<cmd>:cnext<cr>")
+vim.keymap.set("n", "[q", "<cmd>:cprev<cr>")
 
-vim.keymap.set("n", "<M-h>", require("harpoon.ui").nav_prev)
-vim.keymap.set("n", "<M-l>", require("harpoon.ui").nav_next)
 
-vim.keymap.set("n", "<M-j>", "<cmd>:cnext<cr>")
-vim.keymap.set("n", "<M-k>", "<cmd>:cprev<cr>")
+vim.keymap.set("i", "jj", "<Esc>")
+vim.keymap.set("n", "tt", ":tab split<CR>")
+vim.keymap.set("n", "tc", ":tabclose<CR>")
 
-vim.keymap.set("n", "<C-h>", "<cmd>:NavigatorLeft<cr>")
-vim.keymap.set("n", "<C-l>", "<cmd>:NavigatorRight<cr>")
-vim.keymap.set("n", "<C-j>", "<cmd>:NavigatorDown<cr>")
-vim.keymap.set("n", "<C-k>", "<cmd>:NavigatorUp<cr>")
-vim.keymap.set("n", "<C-\\>", "<cmd>:NavigatorPrevious<cr>")
-
-require("dap-python").setup("~/debugpy-venv/bin/python")
+-- vim.cmd("cnoreabbrev <expr> h getcmdtype() == ':' && getcmdline() == 'h' ? 'tab help' : 'h'")
+-- vim.cmd("cnoreabbrev <expr> help getcmdtype() == ':' && getcmdline() == 'help' ? 'tab help' : 'help'")
 
 vim.o.diffopt = "internal,filler,closeoff,vertical"
 
 vim.o.hlsearch = false
+vim.o.wrap = false
 
 vim.wo.number = true
 
@@ -376,8 +536,6 @@ vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Go to previous dia
 vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = 'Go to next diagnostic message' })
 vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Open floating diagnostic message' })
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostics list' })
-
-vim.keymap.set('n', '<leader>u', require('undotree').toggle, { desc = 'Toggle [U]ndotree' })
 
 local highlight_group = vim.api.nvim_create_augroup('YankHighlight', { clear = true })
 vim.api.nvim_create_autocmd('TextYankPost', {
@@ -526,7 +684,8 @@ end, 0)
 
 vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, { desc = '[R]e[n]ame' })
 vim.keymap.set('n', '<leader>ca', function()
-  vim.lsp.buf.code_action { context = { only = { 'quickfix', 'refactor', 'source' } } }
+  -- vim.lsp.buf.code_action { context = { only = { 'quickfix', 'refactor', 'source' } } }
+  vim.lsp.buf.code_action()
 end, { desc = '[C]ode [A]ction' })
 
 vim.keymap.set('n', 'gd', require('telescope.builtin').lsp_definitions, { desc = '[G]oto [D]efinition' })
@@ -534,8 +693,6 @@ vim.keymap.set('n', 'gr', require('telescope.builtin').lsp_references, { desc = 
 vim.keymap.set('n', 'gI', require('telescope.builtin').lsp_implementations, { desc = '[G]oto [I]mplementation' })
 vim.keymap.set('n', '<leader>D', require('telescope.builtin').lsp_type_definitions, { desc = 'Type [D]efinition' })
 vim.keymap.set('n', '<leader>ss', require('telescope.builtin').lsp_document_symbols, { desc = '[S]earch [S]ymbols' })
-vim.keymap.set('n', '<leader>dt', require('dap').toggle_breakpoint, { desc = '[D]ebugger [T]oggle Breakpoint' })
-vim.keymap.set('n', '<leader>dc', require('dap').continue, { desc = '[D]ebugger Start/[C]ontinue' })
 vim.keymap.set('n', '<leader>ws', require('telescope.builtin').lsp_dynamic_workspace_symbols,
   { desc = '[W]orkspace [S]ymbols' })
 
@@ -560,11 +717,10 @@ local custom_format = function()
   end
 end
 
-vim.keymap.set('n', '<leader>f', custom_format, { desc = 'Format current buffer' })
+vim.keymap.set({ 'n', 'v' }, '<leader>f', custom_format, { desc = 'Format current buffer' })
 
 require('which-key').add({
   { "<leader>c", group = "[C]ode" },
-  { "<leader>d", group = "[D]ebugger" },
   { "<leader>g", group = "[G]it" },
   { "<leader>h", group = "[H]arpoon" },
   { "<leader>r", group = "[R]ename" },
@@ -615,14 +771,42 @@ mason_lspconfig.setup {
   ensure_installed = vim.tbl_keys(servers),
 }
 
+local lsp_configs = {
+  -- pyright = {
+  --   settings = {
+  --     pyright = {
+  --       disableOrganizeImports = true
+  --     },
+  --     python = {
+  --       analysis = {
+  --         ignore = { "*" }
+  --       }
+  --     },
+  --   }
+  -- },
+  -- ruff_lsp = {
+  --   on_attach = function(client, bufnr)
+  --     if client.name == 'ruff_lsp' then
+  --       client.server_capabilities.hoverProvider = false
+  --     end
+  --   end
+  -- }
+}
+
 mason_lspconfig.setup_handlers {
   function(server_name)
-    require('lspconfig')[server_name].setup {
+    local config = {
       capabilities = capabilities,
       -- on_attach = on_attach,
       settings = servers[server_name],
       filetypes = (servers[server_name] or {}).filetypes,
     }
+
+    if lsp_configs[server_name] ~= nil then
+      config = vim.tbl_deep_extend('force', config, lsp_configs[server_name])
+    end
+
+    require('lspconfig')[server_name].setup(config)
   end,
 }
 
