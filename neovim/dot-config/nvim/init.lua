@@ -66,6 +66,7 @@ require('lazy').setup({
     end,
     priority = 1000
   },
+
   -- {
   --   "catppuccin/nvim",
   --   config = function()
@@ -74,17 +75,6 @@ require('lazy').setup({
   --   end,
   --   name = "catppuccin",
   --   priority = 1000
-  -- },
-  -- {
-  --   'projekt0n/github-nvim-theme',
-  --   lazy = false,  -- make sure we load this during startup if it is your main colorscheme
-  --   priority = 1000, -- make sure to load this before all the other start plugins
-  --   config = function()
-  --     require('github-theme').setup({})
-  --
-  --     vim.o.termguicolors = true
-  --     vim.cmd('colorscheme github_dark')
-  --   end,
   -- },
 
   {
@@ -116,13 +106,16 @@ require('lazy').setup({
     lazy = true
   },
 
-  -- {
-  --   'jmbuhr/otter.nvim',
-  --   dependencies = {
-  --     'nvim-treesitter/nvim-treesitter',
-  --   },
-  --   opts = {},
-  -- },
+  {
+    'jmbuhr/otter.nvim',
+    dependencies = {
+      'nvim-treesitter/nvim-treesitter',
+    },
+    opts = {},
+    keys = {
+      {'<leader><leader>o', function() require('otter').activate() end, desc = "Activate [O]tter"}
+    }
+  },
 
   {
     'pwntester/octo.nvim',
@@ -149,8 +142,10 @@ require('lazy').setup({
     keys = {
       { "<leader>m",  function() require("harpoon.mark").add_file() end,        desc = "[M]ark file" },
       { "<leader>oh", function() require("harpoon.ui").toggle_quick_menu() end, desc = "[O]pen [H]arpoon" },
-      { "<M-l>",      function() require("harpoon.ui").nav_prev() end,          desc = "[H]arpoon Next" },
+      { "<M-h>",      function() require("harpoon.ui").nav_prev() end,          desc = "[H]arpoon Next" },
       { "<M-l>",      function() require("harpoon.ui").nav_next() end,          desc = "[H]arpoon Prev" },
+      { "[h",      function() require("harpoon.ui").nav_prev() end,          desc = "[H]arpoon Next" },
+      { "]h",      function() require("harpoon.ui").nav_next() end,          desc = "[H]arpoon Prev" },
     },
   },
 
@@ -269,16 +264,22 @@ require('lazy').setup({
   {
     'mfussenegger/nvim-dap',
     init = function()
-      vim.api.nvim_set_hl(0, 'debug', {
-        bg = '#FFFFFF',
-        fg = '#000000'
-      })
-      -- vim.fn.sign_define('DapBreakpoint', { text = '🛑', texthl = 'debug', linehl = '', numhl = '' })
-      -- vim.fn.sign_define('DapBreakpoint', { text = 'B', texthl = 'debug', linehl = '', numhl = '' })
-      -- vim.fn.sign_define('DapBreakpointCondition', { text = 'C', texthl = 'debug', linehl = '', numhl = '' })
-      -- vim.fn.sign_define('DapLogPoint', { text = 'L', texthl = 'debug', linehl = '', numhl = '' })
-      -- vim.fn.sign_define('DapStopped', { text = '→', texthl = 'debug', linehl = '', numhl = '' })
-      -- vim.fn.sign_define('DapBreakpointRejected', { text = 'R', texthl = 'debug', linehl = '', numhl = '' })
+      -- vim.api.nvim_set_hl(0, 'debug', {
+      --   bg = '#FFFFFF',
+      --   fg = '#000000'
+      -- })
+
+      -- vim.fn.sign_define('DapBreakpoint', { text = '🛑', texthl = '', linehl = '', numhl = '' })
+      -- vim.fn.sign_define('DapBreakpointCondition', { text = '', texthl = '', linehl = '', numhl = '' })
+      -- vim.fn.sign_define('DapLogPoint', { text = '', texthl = '', linehl = '', numhl = '' })
+      -- vim.fn.sign_define('DapStopped', { text = '→', texthl = '', linehl = '', numhl = '' })
+      -- vim.fn.sign_define('DapBreakpointRejected', { text = 'R', texthl = '', linehl = '', numhl = '' })
+      --
+      vim.fn.sign_define('DapBreakpoint', { text = 'B', texthl = '', linehl = '', numhl = '' })
+      vim.fn.sign_define('DapBreakpointCondition', { text = 'C', texthl = '', linehl = '', numhl = '' })
+      vim.fn.sign_define('DapLogPoint', { text = 'L', texthl = '', linehl = '', numhl = '' })
+      vim.fn.sign_define('DapStopped', { text = '→', texthl = '', linehl = '', numhl = '' })
+      vim.fn.sign_define('DapBreakpointRejected', { text = 'R', texthl = '', linehl = '', numhl = '' })
     end,
     keys = {
       { '<leader>rc', function() require("dap").continue() end,  desc = '[C]ontinue' },
@@ -330,15 +331,15 @@ require('lazy').setup({
     keys = {
       { '<leader>ow', function() require("dapui").toggle() end, desc = 'DAP UI' }
     },
-    -- init = function()
-    --   local dap = require('dap')
-    --   dap.listeners.before.attach.dapui_config = function()
-    --     require("dapui").open({})
-    --   end
-    --   dap.listeners.before.launch.dapui_config = function()
-    --     require("dapui").open({})
-    --   end
-    -- end
+    init = function()
+      local dap = require('dap')
+      dap.listeners.before.attach.dapui_config = function()
+        require("dapui").open({})
+      end
+      dap.listeners.before.launch.dapui_config = function()
+        require("dapui").open({})
+      end
+    end
   },
 
   {
@@ -507,8 +508,8 @@ vim.keymap.set({ "n", "v" }, "<leader>d", "\"+d", { desc = "delete to clipboard"
 vim.keymap.set({ "n", "v" }, "<leader>c", "\"+c", { desc = "copy to clipboard" })
 vim.keymap.set({ "n", "v" }, "<leader>p", "\"+p", { desc = "paste from clipboard" })
 
--- vim.keymap.set("n", "<M-j>", "<cmd>:cnext<cr>")
--- vim.keymap.set("n", "<M-k>", "<cmd>:cprev<cr>")
+vim.keymap.set("n", "<M-j>", "<cmd>:cnext<cr>")
+vim.keymap.set("n", "<M-k>", "<cmd>:cprev<cr>")
 vim.keymap.set("n", "]q", "<cmd>:cnext<cr>")
 vim.keymap.set("n", "[q", "<cmd>:cprev<cr>")
 
@@ -516,9 +517,6 @@ vim.keymap.set("n", "[q", "<cmd>:cprev<cr>")
 vim.keymap.set("i", "jj", "<Esc>")
 vim.keymap.set("n", "tt", ":tab split<CR>")
 vim.keymap.set("n", "tc", ":tabclose<CR>")
-
--- vim.cmd("cnoreabbrev <expr> h getcmdtype() == ':' && getcmdline() == 'h' ? 'tab help' : 'h'")
--- vim.cmd("cnoreabbrev <expr> help getcmdtype() == ':' && getcmdline() == 'help' ? 'tab help' : 'help'")
 
 vim.o.diffopt = "internal,filler,closeoff,vertical"
 
@@ -624,16 +622,16 @@ local function telescope_live_grep_open_files()
 end
 
 vim.keymap.set('n', '<leader>s/', telescope_live_grep_open_files, { desc = '[S]earch [/] in Open Files' })
-vim.keymap.set('n', '<leader>sb', require('telescope.builtin').buffers, { desc = '[S]earch [B]uffers' })
-vim.keymap.set('n', '<leader>sS', require('telescope.builtin').builtin, { desc = '[S]earch [S]elect Telescope' })
-vim.keymap.set('n', '<leader>gf', require('telescope.builtin').git_files, { desc = 'Search [G]it [F]iles' })
-vim.keymap.set('n', '<leader>sf', require('telescope.builtin').find_files, { desc = '[S]earch [F]iles' })
-vim.keymap.set('n', '<leader>sh', require('telescope.builtin').help_tags, { desc = '[S]earch [H]elp' })
-vim.keymap.set('n', '<leader>sw', require('telescope.builtin').grep_string, { desc = '[S]earch current [W]ord' })
-vim.keymap.set('n', '<leader>sg', require('telescope.builtin').live_grep, { desc = '[S]earch by [G]rep' })
+vim.keymap.set('n', '<leader>sb', function() require('telescope.builtin').buffers() end, { desc = '[S]earch [B]uffers' })
+vim.keymap.set('n', '<leader>sS', function() require('telescope.builtin').builtin() end, { desc = '[S]earch [S]elect Telescope' })
+vim.keymap.set('n', '<leader>gf', function() require('telescope.builtin').git_files() end, { desc = 'Search [G]it [F]iles' })
+vim.keymap.set('n', '<leader>sf', function() require('telescope.builtin').find_files() end, { desc = '[S]earch [F]iles' })
+vim.keymap.set('n', '<leader>sh', function() require('telescope.builtin').help_tags() end, { desc = '[S]earch [H]elp' })
+vim.keymap.set('n', '<leader>sw', function() require('telescope.builtin').grep_string() end, { desc = '[S]earch current [W]ord' })
+vim.keymap.set('n', '<leader>sg', function() require('telescope.builtin').live_grep() end, { desc = '[S]earch by [G]rep' })
 vim.keymap.set('n', '<leader>sG', ':LiveGrepGitRoot<cr>', { desc = '[S]earch by [G]rep on Git Root' })
-vim.keymap.set('n', '<leader>sd', require('telescope.builtin').diagnostics, { desc = '[S]earch [D]iagnostics' })
-vim.keymap.set('n', '<leader>sr', require('telescope.builtin').resume, { desc = '[S]earch [R]esume' })
+vim.keymap.set('n', '<leader>sd', function() require('telescope.builtin').diagnostics() end, { desc = '[S]earch [D]iagnostics' })
+vim.keymap.set('n', '<leader>sr', function() require('telescope.builtin').resume() end, { desc = '[S]earch [R]esume' })
 
 vim.defer_fn(function()
   require('nvim-treesitter.configs').setup {
@@ -708,12 +706,12 @@ vim.keymap.set('n', '<leader>ca', function()
   vim.lsp.buf.code_action()
 end, { desc = '[C]ode [A]ction' })
 
-vim.keymap.set('n', 'gd', require('telescope.builtin').lsp_definitions, { desc = '[G]oto [D]efinition' })
-vim.keymap.set('n', 'gr', require('telescope.builtin').lsp_references, { desc = '[G]oto [R]eferences' })
-vim.keymap.set('n', 'gI', require('telescope.builtin').lsp_implementations, { desc = '[G]oto [I]mplementation' })
-vim.keymap.set('n', '<leader>D', require('telescope.builtin').lsp_type_definitions, { desc = 'Type [D]efinition' })
-vim.keymap.set('n', '<leader>ss', require('telescope.builtin').lsp_document_symbols, { desc = '[S]earch [S]ymbols' })
-vim.keymap.set('n', '<leader>ws', require('telescope.builtin').lsp_dynamic_workspace_symbols,
+vim.keymap.set('n', 'gd', function() require('telescope.builtin').lsp_definitions() end, { desc = '[G]oto [D]efinition' })
+vim.keymap.set('n', 'gr', function() require('telescope.builtin').lsp_references() end, { desc = '[G]oto [R]eferences' })
+vim.keymap.set('n', 'gI', function() require('telescope.builtin').lsp_implementations() end, { desc = '[G]oto [I]mplementation' })
+vim.keymap.set('n', '<leader>D', function() require('telescope.builtin').lsp_type_definitions() end, { desc = 'Type [D]efinition' })
+vim.keymap.set('n', '<leader>ss', function() require('telescope.builtin').lsp_document_symbols() end, { desc = '[S]earch [S]ymbols' })
+vim.keymap.set('n', '<leader>ws', function() require('telescope.builtin').lsp_dynamic_workspace_symbols() end,
   { desc = '[W]orkspace [S]ymbols' })
 
 -- See `:help K` for why this keymap
@@ -865,10 +863,10 @@ cmp.setup {
     priority_weight = 1,
     comparators = {
       cmp.config.compare.exact,
-      cmp.config.compare.offset,
-      cmp.config.compare.score,
       cmp.config.compare.recently_used,
+      cmp.config.compare.score,
       cmp.config.compare.kind,
+      cmp.config.compare.offset,
     }
   }
 }
