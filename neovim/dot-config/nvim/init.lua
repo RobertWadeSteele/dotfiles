@@ -33,14 +33,59 @@ require('lazy').setup({
   'tpope/vim-sleuth',
 
   {
-    "catppuccin/nvim",
-    config = function()
+    'rebelot/kanagawa.nvim',
+    lazy = false,
+    config = function(opts)
+      require("kanagawa").setup({
+        compile = false, -- enable compiling the colorscheme
+        undercurl = true, -- enable undercurls
+        commentStyle = { italic = true },
+        functionStyle = {},
+        keywordStyle = { italic = true },
+        statementStyle = { bold = true },
+        typeStyle = {},
+        transparent = false, -- do not set background color
+        dimInactive = false, -- dim inactive window `:h hl-NormalNC`
+        terminalColors = true, -- define vim.g.terminal_color_{0,17}
+        colors = {           -- add/modify theme and palette colors
+          palette = {},
+          theme = { wave = {}, lotus = {}, dragon = {}, all = {} },
+        },
+        overrides = function(colors) -- add/modify highlights
+          return {}
+        end,
+        theme = "wave", -- Load "wave" theme when 'background' option is not set
+        background = { -- map the value of 'background' option to a theme
+          dark = "wave", -- try "dragon" !
+          light = "lotus"
+        },
+      })
+      -- vim.cmd("colorscheme kanagawa")
       vim.o.termguicolors = true
-      vim.cmd.colorscheme("catppuccin")
+      vim.cmd.colorscheme("kanagawa")
     end,
-    name = "catppuccin",
     priority = 1000
   },
+  -- {
+  --   "catppuccin/nvim",
+  --   config = function()
+  --     vim.o.termguicolors = true
+  --     vim.cmd.colorscheme("catppuccin")
+  --   end,
+  --   name = "catppuccin",
+  --   priority = 1000
+  -- },
+  -- {
+  --   'projekt0n/github-nvim-theme',
+  --   lazy = false,  -- make sure we load this during startup if it is your main colorscheme
+  --   priority = 1000, -- make sure to load this before all the other start plugins
+  --   config = function()
+  --     require('github-theme').setup({})
+  --
+  --     vim.o.termguicolors = true
+  --     vim.cmd('colorscheme github_dark')
+  --   end,
+  -- },
 
   {
     'numToStr/Navigator.nvim',
@@ -93,43 +138,20 @@ require('lazy').setup({
       }
     },
     keys = {
-      { "<leader>Ors", ":Octo review start<CR>", desc = "[S]tart Review"},
-      { "<leader>Ord", ":Octo review discard<CR>", desc = "[D]iscard Review"}
+      { "<leader>Ors", ":Octo review start<CR>",   desc = "[S]tart Review" },
+      { "<leader>Ord", ":Octo review discard<CR>", desc = "[D]iscard Review" }
     },
-    -- config = function()
-    --   require('which-key').add({
-    --     { "<leader>O",  group = "[O]cto" },
-    --     { "<leader>Or", group = "[R]eview" }
-    --   })
-    --   vim.keymap.set("n", "<leader>Ors", ":Octo review start<cr>", { desc = "[S]tart" })
-    --   vim.keymap.set("n", "<leader>Ord", ":Octo review discard<cr>", { desc = "[D]iscard" })
-    --
-    --   require("octo").setup({
-    --     suppress_missing_scope = {
-    --       projects_v2 = true,
-    --     }
-    --   })
-    -- end
   },
 
   {
     'ThePrimeagen/harpoon',
     opts = {},
     keys = {
-      {"<leader>m", function() require("harpoon.mark").add_file() end, desc = "[M]ark file"},
-      {"<leader>oh", function() require("harpoon.ui").toggle_quick_menu() end, desc = "[O]pen [H]arpoon"},
-      {"<M-l>", function() require("harpoon.ui").nav_prev() end, desc = "[H]arpoon Next"},
-      {"<M-l>", function() require("harpoon.ui").nav_next() end, desc = "[H]arpoon Prev"},
+      { "<leader>m",  function() require("harpoon.mark").add_file() end,        desc = "[M]ark file" },
+      { "<leader>oh", function() require("harpoon.ui").toggle_quick_menu() end, desc = "[O]pen [H]arpoon" },
+      { "<M-l>",      function() require("harpoon.ui").nav_prev() end,          desc = "[H]arpoon Next" },
+      { "<M-l>",      function() require("harpoon.ui").nav_next() end,          desc = "[H]arpoon Prev" },
     },
-    -- config = function()
-    --   vim.keymap.set("n", "<leader>m", require("harpoon.mark").add_file, { desc = "[M]ark file" })
-    --   vim.keymap.set("n", "<leader>oh", require("harpoon.ui").toggle_quick_menu, { desc = "[O]pen [H]arpoon" })
-    --
-    --   -- vim.keymap.set("n", "<M-h>", require("harpoon.ui").nav_prev)
-    --   -- vim.keymap.set("n", "<M-l>", require("harpoon.ui").nav_next)
-    --   vim.keymap.set()
-    --   vim.keymap.set("n", "]h", require("harpoon.ui").nav_next, { desc = "[H]arpoon Prev" })
-    -- end
   },
 
   {
@@ -146,13 +168,17 @@ require('lazy').setup({
 
   {
     'stevearc/oil.nvim',
-    config = function()
-      require("oil").setup()
-      vim.keymap.set("n", "-", ":Oil<CR>", { desc = "oil" })
-    end,
-    opts = {},
+    opts = {
+      view_options = {
+        show_hidden = true
+      }
+    },
+    keys = {
+      { "-", ":Oil<CR>", desc = "Oil" }
+    },
     -- Optional dependencies
     dependencies = { "nvim-tree/nvim-web-devicons" },
+    lazy = false
   },
 
   {
@@ -235,48 +261,63 @@ require('lazy').setup({
   {
     "jiaoshijie/undotree",
     dependencies = "nvim-lua/plenary.nvim",
-    config = function()
-      vim.keymap.set('n', '<leader>tu', require('undotree').toggle, { desc = 'Toggle [U]ndotree' })
-      require('undotree').setup()
-    end
+    keys = {
+      { "<leader>ou", function() require("undotree").toggle() end, desc = "[O]pen [U]ndotree" }
+    },
   },
 
   {
     'mfussenegger/nvim-dap',
-    config = function()
-      local dap = require('dap')
-
-      vim.keymap.set('n', '<leader>rc', dap.continue, { desc = '[C]ontinue' })
-      vim.keymap.set('n', '<leader>rb', dap.toggle_breakpoint, { desc = '[B]reakpoint' })
-      vim.keymap.set('n', '<leader>rB', function()
-        local condition = vim.fn.input("Condition: ")
-        local hit_count = vim.fn.input("Hit count: ")
-        local log_message = vim.fn.input("Log message: ")
-        condition = condition ~= "" and condition or nil
-        hit_count = hit_count ~= "" and hit_count or nil
-        log_message = log_message ~= "" and log_message or nil
-        print(condition)
-        print(hit_count)
-        print(log_message)
-        dap.set_breakpoint(condition, hit_count, log_message)
-      end
-      , { desc = 'Conditional [B]reakpoint' })
-      vim.keymap.set('n', '<leader>ro', dap.step_over, { desc = 'Step [O]ver' })
-      vim.keymap.set('n', '<leader>ri', dap.step_into, { desc = 'Step [I]nto' })
-      vim.keymap.set('n', '<leader>rO', dap.step_out, { desc = 'Step [O]ut' })
-      vim.keymap.set('n', '<leader>rT', dap.terminate, { desc = '[T]erminate' })
-
+    init = function()
       vim.api.nvim_set_hl(0, 'debug', {
         bg = '#FFFFFF',
         fg = '#000000'
       })
       -- vim.fn.sign_define('DapBreakpoint', { text = '🛑', texthl = 'debug', linehl = '', numhl = '' })
-      vim.fn.sign_define('DapBreakpoint', { text = 'B', texthl = 'debug', linehl = '', numhl = '' })
-      vim.fn.sign_define('DapBreakpointCondition', { text = 'C', texthl = 'debug', linehl = '', numhl = '' })
-      vim.fn.sign_define('DapLogPoint', { text = 'L', texthl = 'debug', linehl = '', numhl = '' })
-      vim.fn.sign_define('DapStopped', { text = '→', texthl = 'debug', linehl = '', numhl = '' })
-      vim.fn.sign_define('DapBreakpointRejected', { text = 'R', texthl = 'debug', linehl = '', numhl = '' })
-    end
+      -- vim.fn.sign_define('DapBreakpoint', { text = 'B', texthl = 'debug', linehl = '', numhl = '' })
+      -- vim.fn.sign_define('DapBreakpointCondition', { text = 'C', texthl = 'debug', linehl = '', numhl = '' })
+      -- vim.fn.sign_define('DapLogPoint', { text = 'L', texthl = 'debug', linehl = '', numhl = '' })
+      -- vim.fn.sign_define('DapStopped', { text = '→', texthl = 'debug', linehl = '', numhl = '' })
+      -- vim.fn.sign_define('DapBreakpointRejected', { text = 'R', texthl = 'debug', linehl = '', numhl = '' })
+    end,
+    keys = {
+      { '<leader>rc', function() require("dap").continue() end,  desc = '[C]ontinue' },
+      {
+        '<leader>rC',
+        function()
+          require("dap").continue({
+            before = function(config)
+              local args_string = vim.fn.input('Arguments: ')
+              config.args = vim.split(args_string, " +")
+            end
+          })
+        end
+      },
+      { '<leader>ri', function() require("dap").step_into() end, desc = 'Step [O]ver' },
+      { '<leader>ro', function() require("dap").step_over() end, desc = 'Step [O]ver' },
+      { '<leader>rO', function() require("dap").step_out() end,  desc = 'Step [O]ver' },
+      { '<leader>rT', function() require("dap").terminate() end, desc = 'Step [O]ver' },
+      {
+        '<leader>rb',
+        function()
+          require("dap").toggle_breakpoint()
+        end,
+        desc = 'Toggle [B]reakpoint'
+      },
+      {
+        '<leader>rB',
+        function()
+          local condition = vim.fn.input("Condition: ")
+          local hit_count = vim.fn.input("Hit count: ")
+          local log_message = vim.fn.input("Log message: ")
+          condition = condition ~= "" and condition or nil
+          hit_count = hit_count ~= "" and hit_count or nil
+          log_message = log_message ~= "" and log_message or nil
+          require("dap").set_breakpoint(condition, hit_count, log_message)
+        end,
+        desc = "Conditional [B]reakpoint"
+      }
+    },
   },
 
   {
@@ -285,18 +326,19 @@ require('lazy').setup({
       "mfussenegger/nvim-dap",
       "nvim-neotest/nvim-nio"
     },
-    config = function()
-      local dap = require('dap')
-      local dapui = require("dapui")
-      vim.keymap.set('n', '<leader>tw', dapui.toggle, { desc = 'DAP UI' })
-      dapui.setup()
-      dap.listeners.before.attach.dapui_config = function()
-        dapui.open()
-      end
-      dap.listeners.before.launch.dapui_config = function()
-        dapui.open()
-      end
-    end
+    opts = {},
+    keys = {
+      { '<leader>ow', function() require("dapui").toggle() end, desc = 'DAP UI' }
+    },
+    -- init = function()
+    --   local dap = require('dap')
+    --   dap.listeners.before.attach.dapui_config = function()
+    --     require("dapui").open({})
+    --   end
+    --   dap.listeners.before.launch.dapui_config = function()
+    --     require("dapui").open({})
+    --   end
+    -- end
   },
 
   {
@@ -305,6 +347,11 @@ require('lazy').setup({
       'mfussenegger/nvim-dap',
     },
     event = "BufRead *.py",
+    keys = {
+      { '<leader>rv', function() require("dap-python").debug_selection() end, desc = 'Debug selection', ft = "python", mode = "v" },
+      { '<leader>tm', function() require("dap-python").test_method() end,     desc = 'Test method',     ft = "python" },
+      { '<leader>tc', function() require("dap-python").test_class() end,      desc = 'Test class',      ft = "python" },
+    },
     config = function()
       local venv_path = os.getenv("VIRTUAL_ENV")
       if venv_path == nil then
@@ -314,34 +361,7 @@ require('lazy').setup({
 
       local python_path = venv_path .. '/bin/python'
 
-      local enrich_config = function(config, on_config)
-        if not config.args then
-          local args_string = vim.fn.input('Arguments: ')
-          config.args = vim.split(args_string, " +")
-        end
-        if not config.pythonPath and not config.python then
-          config.pythonPath = python_path
-        end
-        on_config(config)
-      end
-
-      local dap_python = require("dap-python")
-
-      vim.api.nvim_create_autocmd({ 'BufEnter' }, {
-        pattern = { "*.py" },
-        callback = function(event)
-          require('which-key').add({
-            { "<leader>r", group = "[R]un" },
-            { "<leader>t", group = "[T]est" },
-          })
-          vim.keymap.set({ 'v' }, '<leader>rv', dap_python.debug_selection,
-            { buffer = event.buf, desc = 'debug selection' })
-          vim.keymap.set({ 'n' }, '<leader>tm', dap_python.test_method, { buffer = event.buf, desc = 'test method' })
-          vim.keymap.set({ 'n' }, '<leader>tc', dap_python.test_class, { buffer = event.buf, desc = 'test class' })
-        end
-      })
-
-      require("dap-python").setup(python_path, { include_configs = false, enrich_config = enrich_config })
+      require("dap-python").setup(python_path, { include_configs = false })
     end
   },
 
