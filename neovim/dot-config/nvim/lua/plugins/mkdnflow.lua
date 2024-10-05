@@ -2,7 +2,7 @@ return {
   "jakewvincent/mkdnflow.nvim",
   opts = {
     mappings = {
-      MkdnEnter = false,
+      MkdnEnter = { { 'n', 'v' }, '<CR>' },
       MkdnTab = false,
       MkdnSTab = false,
       MkdnNextLink = { 'n', ']l' },
@@ -27,16 +27,16 @@ return {
       MkdnNewListItemAboveInsert = { 'n', 'O' },
       MkdnExtendList = false,
       MkdnUpdateNumbering = { 'n', '<leader>nn' },
-      MkdnTableNextCell = { 'i', '<Tab>' },
-      MkdnTablePrevCell = { 'i', '<S-Tab>' },
+      MkdnTableNextCell = false,
+      MkdnTablePrevCell = false,
       MkdnTableNextRow = false,
-      MkdnTablePrevRow = { 'i', '<M-CR>' },
-      MkdnTableNewRowBelow = { 'n', '<leader>ir' },
-      MkdnTableNewRowAbove = { 'n', '<leader>iR' },
-      MkdnTableNewColAfter = { 'n', '<leader>ic' },
-      MkdnTableNewColBefore = { 'n', '<leader>iC' },
-      MkdnFoldSection = { 'n', '<leader>f' },
-      MkdnUnfoldSection = { 'n', '<leader>F' }
+      MkdnTablePrevRow = false,
+      MkdnTableNewRowBelow = false,
+      MkdnTableNewRowAbove = false,
+      MkdnTableNewColAfter = false,
+      MkdnTableNewColBefore = false,
+      MkdnFoldSection = false,
+      MkdnUnfoldSection = false
     }
   }
 }
