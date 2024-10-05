@@ -6,7 +6,7 @@ return {
   },
   opts = {},
   keys = {
-    { '<leader>ow', function() require("dapui").toggle() end, desc = 'DAP UI' }
+    { '<leader><leader>w', function() require("dapui").toggle() end, desc = 'DAP UI' }
   },
   init = function()
     local dap = require('dap')
@@ -16,8 +16,5 @@ return {
     dap.listeners.before.launch.dapui_config = function()
       require("dapui").open({})
     end
-    -- dap.listeners.before.event_exited.dapui_config = function()
-    --   require("dapui").close()
-    -- end
   end
 }

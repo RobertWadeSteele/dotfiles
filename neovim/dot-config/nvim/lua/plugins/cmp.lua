@@ -1,5 +1,49 @@
 return {
   'hrsh7th/nvim-cmp',
+  config = function()
+    local cmp = require('cmp')
+    local luasnip = require('luasnip')
+    require('luasnip.loaders.from_vscode').lazy_load()
+    luasnip.config.setup {}
+
+    cmp.setup {
+      snippet = {
+        expand = function(args)
+          luasnip.lsp_expand(args.body)
+        end,
+      },
+      completion = {
+        completeopt = 'menu,menuone,noinsert,noselect',
+      },
+      preselect = cmp.PreselectMode.None,
+      mapping = cmp.mapping.preset.insert {
+        ['<C-n>'] = cmp.mapping.select_next_item(),
+        ['<C-p>'] = cmp.mapping.select_prev_item(),
+        ['<C-b>'] = cmp.mapping.scroll_docs(-4),
+        ['<C-f>'] = cmp.mapping.scroll_docs(4),
+        ['<C-Space>'] = cmp.mapping.complete {},
+        ['<CR>'] = cmp.mapping.confirm {
+          behavior = cmp.ConfirmBehavior.Replace,
+          select = true,
+        },
+      },
+      sources = {
+        { name = 'nvim_lsp' },
+        { name = 'luasnip' },
+        { name = 'path' },
+      },
+      sorting = {
+        priority_weight = 1,
+        comparators = {
+          cmp.config.compare.exact,
+          cmp.config.compare.recently_used,
+          cmp.config.compare.score,
+          cmp.config.compare.kind,
+          cmp.config.compare.offset,
+        }
+      }
+    }
+  end,
   opts = function(_, opts)
     opts.sources = opts.sources or {}
     table.insert(opts.sources, {

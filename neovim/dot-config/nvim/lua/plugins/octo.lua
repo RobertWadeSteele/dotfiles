@@ -19,7 +19,7 @@ return {
     },
   },
   keys = {
-    { "<leader>Ors", ":Octo review start<CR>",   desc = "[S]tart Review" },
-    { "<leader>Ord", ":Octo review discard<CR>", desc = "[D]iscard Review" }
+    { "<leader>ors", ":Octo review start<CR>",   desc = "[S]tart Review" },
+    { "<leader>ord", ":Octo review discard<CR>", desc = "[D]iscard Review" }
   },
 }
