@@ -34,3 +34,8 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   group = highlight_group,
   pattern = '*',
 })
+
+vim.keymap.set('o', 'il', ':<c-u>normal! $v^<cr>', { silent = true, noremap = true })
+vim.keymap.set('x', 'il', ':<c-u>normal! $v^<cr>', { silent = true, noremap = true })
+vim.keymap.set('o', 'al', ':<c-u>normal! $v0<cr>', { silent = true, noremap = true })
+vim.keymap.set('o', 'al', ':<c-u>normal! $v0<cr>', { silent = true, noremap = true })
