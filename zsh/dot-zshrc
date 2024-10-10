@@ -56,7 +56,6 @@ if [ -f '/Users/robertsteele/google-cloud-sdk/completion.zsh.inc' ]; then . '/Us
 # bun
 export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
-export PATH=/Users/robertsteele/.meteor:$PATH
 [ -s "/Users/robertsteele/.bun/_bun" ] && source "/Users/robertsteele/.bun/_bun"
 
 # pyenv
@@ -73,8 +72,6 @@ alias ll='ls -la'
 alias l.='ls -d .* --color=auto'
 
 alias ctoj="python -uc 'import csv, json, sys; sys.stdout.write(json.dumps([dict(r) for r in csv.DictReader(sys.stdin)]))'"
-
-export PATH=/Users/robertsteele/.meteor:$PATH
 
 alias deploydev='gh pr comment $(git rev-parse --abbrev-ref HEAD) --editor'
 
