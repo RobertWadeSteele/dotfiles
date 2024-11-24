@@ -56,13 +56,13 @@ vim.keymap.set('n', '<leader>wl', function()
   print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
 end, { desc = '[W]orkspace [L]ist Folders' })
 
-local custom_format = function()
-  local filetype = vim.bo.filetype
-  if filetype == "templ" then
-    vim.lsp.buf.format({ filter = function(client) return client.name == 'templ' end })
-  else
-    vim.lsp.buf.format()
-  end
-end
+-- local custom_format = function()
+--   local filetype = vim.bo.filetype
+--   if filetype == "templ" then
+--     vim.lsp.buf.format({ filter = function(client) return client.name == 'templ' end })
+--   else
+--     vim.lsp.buf.format()
+--   end
+-- end
 
-vim.keymap.set({ 'n', 'v' }, '<leader>f', custom_format, { desc = 'Format current buffer' })
+-- vim.keymap.set({ 'n', 'v' }, '<leader>f', custom_format, { desc = 'Format current buffer' })

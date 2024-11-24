@@ -60,7 +60,7 @@ return {
         end
         return 'make install_jsregexp'
       end)(),
-      dependencies = { "rafamadriz/friendly-snippets" },
+      -- dependencies = { "rafamadriz/friendly-snippets" },
       keys = {
         { "<C-K>", function() require("luasnip").expand() end, desc = "expand snippet",                mode = { "i" } },
         { "<C-L>", function() require("luasnip").jump(1) end,  desc = "jump to next snippet slot",     mode = { "i", "s" } },
@@ -83,6 +83,6 @@ return {
     'hrsh7th/cmp-nvim-lsp',
     'hrsh7th/cmp-path',
 
-    'rafamadriz/friendly-snippets',
+    -- 'rafamadriz/friendly-snippets',
   },
 }

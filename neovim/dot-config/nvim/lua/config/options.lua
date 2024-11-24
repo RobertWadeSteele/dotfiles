@@ -26,15 +26,6 @@ vim.o.foldmethod = "indent"
 vim.o.foldopen = "block"
 vim.o.foldlevelstart = 99
 
-local highlight_group = vim.api.nvim_create_augroup('YankHighlight', { clear = true })
-vim.api.nvim_create_autocmd('TextYankPost', {
-  callback = function()
-    vim.highlight.on_yank()
-  end,
-  group = highlight_group,
-  pattern = '*',
-})
-
 vim.keymap.set('o', 'il', ':<c-u>normal! $v^<cr>', { silent = true, noremap = true })
 vim.keymap.set('x', 'il', ':<c-u>normal! $v^<cr>', { silent = true, noremap = true })
 vim.keymap.set('o', 'al', ':<c-u>normal! $v0<cr>', { silent = true, noremap = true })

@@ -1,7 +1,9 @@
 -- lazy loads first
 require('config.lazy')
 
-require('config.builtin')
+require('config.options')
 require('config.keymaps')
-require('config.lsp')
-require('config.treesitter')
+require('config.autocmds')
+
+require('lsp')
+require('treesitter')
