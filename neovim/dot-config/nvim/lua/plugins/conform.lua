@@ -3,12 +3,13 @@ return {
 	opts = {
 		formatters_by_ft = {
 			html = { "prettierd" },
-			javascript = { "prettierd", "prettier" },
+			javascript = { "prettierd" },
 			typescript = { "prettierd" },
 			javascriptreact = { "prettierd" },
 			typescriptreact = { "prettierd" },
 			python = { "ruff" },
 			lua = { "stylua" },
+			templ = { "templ", "fm" }
 		},
 	},
 	keys = {
