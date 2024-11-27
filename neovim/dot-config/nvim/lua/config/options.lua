@@ -26,7 +26,7 @@ vim.o.foldmethod = "indent"
 vim.o.foldopen = "block"
 vim.o.foldlevelstart = 99
 
-vim.keymap.set('o', 'il', ':<c-u>normal! $v^<cr>', { silent = true, noremap = true })
-vim.keymap.set('x', 'il', ':<c-u>normal! $v^<cr>', { silent = true, noremap = true })
-vim.keymap.set('o', 'al', ':<c-u>normal! $v0<cr>', { silent = true, noremap = true })
-vim.keymap.set('o', 'al', ':<c-u>normal! $v0<cr>', { silent = true, noremap = true })
+-- vim.keymap.set('o', 'il', ':<c-u>normal! $v^<cr>', { silent = true, noremap = true })
+-- vim.keymap.set('x', 'il', ':<c-u>normal! $v^<cr>', { silent = true, noremap = true })
+-- vim.keymap.set('o', 'al', ':<c-u>normal! $v0<cr>', { silent = true, noremap = true })
+-- vim.keymap.set('x', 'al', ':<c-u>normal! $v0<cr>', { silent = true, noremap = true })
