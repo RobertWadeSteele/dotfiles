@@ -1,1 +1,3 @@
-return { 'tpope/vim-fugitive' }
+---@module 'lazy.types'
+---@type LazySpec
+return { "tpope/vim-fugitive" }

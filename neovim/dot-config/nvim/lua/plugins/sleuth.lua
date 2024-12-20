@@ -1,1 +1,3 @@
-return { 'tpope/vim-sleuth' }
+---@module 'lazy.types'
+---@type LazySpec
+return { "tpope/vim-sleuth" }

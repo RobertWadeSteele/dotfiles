@@ -1,3 +1,5 @@
+---@module 'lazy.types'
+---@type LazySpec
 return {
 	"folke/tokyonight.nvim",
 	lazy = false,

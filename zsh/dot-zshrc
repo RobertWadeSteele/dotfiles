@@ -100,3 +100,6 @@ compdef _dotnet_zsh_complete dotnet
 if command -v direnv &> /dev/null; then
 	eval "$(direnv hook zsh)"
 fi
+. "/home/rob/.deno/env"
+# bun completions
+[ -s "/home/rob/.bun/_bun" ] && source "/home/rob/.bun/_bun"

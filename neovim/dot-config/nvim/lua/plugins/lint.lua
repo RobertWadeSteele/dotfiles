@@ -1,3 +1,5 @@
+---@module 'lazy.types'
+---@type LazySpec
 return {
 	"mfussenegger/nvim-lint",
 	config = function()

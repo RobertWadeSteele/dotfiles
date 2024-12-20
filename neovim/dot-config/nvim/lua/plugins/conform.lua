@@ -1,3 +1,5 @@
+---@module 'lazy.types'
+---@type LazySpec
 return {
 	"stevearc/conform.nvim",
 	opts = {
@@ -7,9 +9,11 @@ return {
 			typescript = { "prettierd" },
 			javascriptreact = { "prettierd" },
 			typescriptreact = { "prettierd" },
+			json = { "prettierd" },
 			python = { "ruff" },
 			lua = { "stylua" },
-			templ = { "templ", "fm" }
+			templ = { "templ", "fm" },
+			go = { "gofmt" },
 		},
 	},
 	keys = {
