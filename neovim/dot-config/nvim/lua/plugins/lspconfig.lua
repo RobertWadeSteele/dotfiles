@@ -5,18 +5,50 @@ return {
 
 	opts = {
 		servers = {
+			pylsp = {
+				settings = {
+					pylsp = {
+						plugins = {
+							autopep8 = {
+								enabled = false,
+							},
+							flake8 = {
+								enabled = false,
+							},
+							mccabe = {
+								enabled = false,
+							},
+							pycodestyle = {
+								enabled = false,
+							},
+							pydocstyle = {
+								enabled = false,
+							},
+							pyflakes = {
+								enabled = false,
+							},
+							pylint = {
+								enabled = false,
+							},
+							yapf = {
+								enabled = false,
+							},
+						},
+					},
+				},
+			},
 			clangd = {},
 			gopls = {},
 			templ = {},
-			pyright = {},
 			jsonls = {},
 			emmet_language_server = { filetypes = { "html", "templ", "typescriptreact", "javascriptreact" } },
 			rust_analyzer = {},
 			ts_ls = {
+				filetypes = { "javascript", "typescript", "typescriptreact", "javascriptreact" },
 				single_file_support = false,
 			},
 			html = { filetypes = { "html", "twig", "hbs", "templ" } },
-			htmx = { filetypes = { "html", "templ" } },
+			-- htmx = { filetypes = { "html", "templ" } },
 			tailwindcss = { filetypes = { "html", "templ", "typescriptreact", "javascriptreact" } },
 			csharp_ls = {},
 			lua_ls = {
@@ -43,7 +75,7 @@ return {
 		local mason_lspconfig = require("mason-lspconfig")
 
 		mason_lspconfig.setup({
-			automatic_installation = true,
+			automatic_installation = false,
 			ensure_installed = vim.tbl_keys(opts.servers),
 		})
 

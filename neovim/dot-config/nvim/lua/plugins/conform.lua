@@ -10,7 +10,7 @@ return {
 			javascriptreact = { "prettierd" },
 			typescriptreact = { "prettierd" },
 			json = { "prettierd" },
-			python = { "ruff_format" },
+			python = { "ruff_format", lsp_format = "fallback" },
 			lua = { "stylua" },
 			go = { "gofmt" },
 			templ = { "templ", "fm" },

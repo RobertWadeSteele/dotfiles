@@ -4,6 +4,7 @@ vim.o.hlsearch = false
 vim.o.wrap = false
 
 vim.wo.number = true
+vim.wo.relativenumber = true
 
 vim.o.mouse = 'a'
 
