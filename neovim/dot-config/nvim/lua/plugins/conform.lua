@@ -9,6 +9,7 @@ return {
 			typescript = { "prettierd" },
 			javascriptreact = { "prettierd" },
 			typescriptreact = { "prettierd" },
+			toml = { lsp_format = "always" },
 			json = { "prettierd" },
 			python = { "ruff_format", lsp_format = "fallback" },
 			lua = { "stylua" },

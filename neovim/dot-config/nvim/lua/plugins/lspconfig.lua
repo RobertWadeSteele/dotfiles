@@ -5,38 +5,8 @@ return {
 
 	opts = {
 		servers = {
-			pylsp = {
-				settings = {
-					pylsp = {
-						plugins = {
-							autopep8 = {
-								enabled = false,
-							},
-							flake8 = {
-								enabled = false,
-							},
-							mccabe = {
-								enabled = false,
-							},
-							pycodestyle = {
-								enabled = false,
-							},
-							pydocstyle = {
-								enabled = false,
-							},
-							pyflakes = {
-								enabled = false,
-							},
-							pylint = {
-								enabled = false,
-							},
-							yapf = {
-								enabled = false,
-							},
-						},
-					},
-				},
-			},
+			basedpyright = {},
+			ruff = {},
 			clangd = {},
 			gopls = {},
 			templ = {},
@@ -72,38 +42,20 @@ return {
 
 		local blink = require("blink.cmp")
 		local lspconfig = require("lspconfig")
-		local mason_lspconfig = require("mason-lspconfig")
 
-		mason_lspconfig.setup({
-			automatic_installation = false,
-			ensure_installed = vim.tbl_keys(opts.servers),
-		})
+		for server_name, server_options in pairs(opts.servers) do
+			local capabilities = blink.get_lsp_capabilities((server_options or {}).capabilities)
 
-		mason_lspconfig.setup_handlers({
-			function(server_name)
-				local capabilities = blink.get_lsp_capabilities((opts.servers[server_name] or {}).capabilities)
+			local config = {
+				capabilities = capabilities,
+			}
 
-				local config = {
-					capabilities = capabilities,
-				}
-
-				lspconfig[server_name].setup(config)
-			end,
-		})
+			lspconfig[server_name].setup(config)
+		end
 	end,
 
 	dependencies = {
 		{ "saghen/blink.cmp" },
-
-		{
-			"williamboman/mason.nvim",
-			opts = {},
-		},
-
-		{
-			"williamboman/mason-lspconfig.nvim",
-			opts = {},
-		},
 
 		{
 			"j-hui/fidget.nvim",

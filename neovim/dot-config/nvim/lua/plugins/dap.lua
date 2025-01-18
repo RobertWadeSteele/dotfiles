@@ -3,17 +3,6 @@
 return {
 	"mfussenegger/nvim-dap",
 	init = function()
-		-- vim.api.nvim_set_hl(0, 'debug', {
-		--   bg = '#FFFFFF',
-		--   fg = '#000000'
-		-- })
-
-		-- vim.fn.sign_define('DapBreakpoint', { text = '🛑', texthl = '', linehl = '', numhl = '' })
-		-- vim.fn.sign_define('DapBreakpointCondition', { text = '', texthl = '', linehl = '', numhl = '' })
-		-- vim.fn.sign_define('DapLogPoint', { text = '', texthl = '', linehl = '', numhl = '' })
-		-- vim.fn.sign_define('DapStopped', { text = '→', texthl = '', linehl = '', numhl = '' })
-		-- vim.fn.sign_define('DapBreakpointRejected', { text = 'R', texthl = '', linehl = '', numhl = '' })
-
 		vim.fn.sign_define("DapBreakpoint", { text = "B", texthl = "", linehl = "", numhl = "" })
 		vim.fn.sign_define("DapBreakpointCondition", { text = "C", texthl = "", linehl = "", numhl = "" })
 		vim.fn.sign_define("DapLogPoint", { text = "L", texthl = "", linehl = "", numhl = "" })
