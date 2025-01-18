@@ -4,54 +4,35 @@ option_as_alt = "OnlyLeft"
 [font]
 size = 12
 
-# normal = {family = "JetBrainsMono Nerd Font Mono", style = "Regular"}
-# bold = {family = "JetBrainsMono Nerd Font Mono", style = "Bold"}
-# italic = {family = "JetBrainsMono Nerd Font Mono", style = "Italic"}
-# bold_italic = {family = "JetBrainsMono Nerd Font Mono", style = "Bold Italic"}
-
 normal = {family = "FiraCode Nerd Font Mono", style = "Regular"}
 bold = {family = "FiraCode Nerd Font Mono", style = "Bold"}
 italic = {family = "FiraCode Nerd Font Mono", style = "Italic"}
 
 [env]
 TERM = "xterm-256color"
-# TokyoNight Alacritty Colors
-# Default colors
+
+# Gruvbox Material Dark Hard
+# https://gist.github.com/sainnhe/ad5cbc4f05c4ced83f80e54d9a75d22f 
 [colors.primary]
-background = '#1a1b26'
-foreground = '#c0caf5'
+background= '0x1d2021'
+foreground= '0xd4be98'
 
-#[colors.cursor]
-#cursor = '#c0caf5'
-#text = '#1a1b26'
+[ colors.normal ]
+black=   '0x32302f'
+red=     '0xea6962'
+green=   '0xa9b665'
+yellow=  '0xd8a657'
+blue=    '0x7daea3'
+magenta= '0xd3869b'
+cyan=    '0x89b482'
+white=   '0xd4be98'
 
-# Normal colors
-[colors.normal]
-black = '#15161e'
-red = '#f7768e'
-green = '#9ece6a'
-yellow = '#e0af68'
-blue = '#7aa2f7'
-magenta = '#bb9af7'
-cyan = '#7dcfff'
-white = '#a9b1d6'
-
-# Bright colors
-[colors.bright]
-black = '#414868'
-red = '#f7768e'
-green = '#9ece6a'
-yellow = '#e0af68'
-blue = '#7aa2f7'
-magenta = '#bb9af7'
-cyan = '#7dcfff'
-white = '#c0caf5'
-
-# Indexed Colors
-[[colors.indexed_colors]]
-index = 16
-color = '#ff9e64'
-
-[[colors.indexed_colors]]
-index = 17
-color = '#db4b4b'
+[ colors.bright ]
+black=   '0x32302f'
+red=     '0xea6962'
+green=   '0xa9b665'
+yellow=  '0xd8a657'
+blue=    '0x7daea3'
+magenta= '0xd3869b'
+cyan=    '0x89b482'
+white=   '0xd4be98'
