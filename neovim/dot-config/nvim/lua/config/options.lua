@@ -5,6 +5,7 @@ vim.o.wrap = false
 
 vim.wo.number = true
 vim.wo.relativenumber = true
+-- vim.o.statuscolumn = "%s %l %r "
 
 vim.o.mouse = 'a'
 
@@ -23,11 +24,8 @@ vim.o.timeoutlen = 300
 
 vim.o.completeopt = 'menuone,noselect'
 
-vim.o.foldmethod = "indent"
-vim.o.foldopen = "block"
+-- vim.o.foldmethod = "indent"
+-- vim.o.foldopen = "block"
+vim.o.foldmethod = "expr"
+vim.o.foldexpr = "v:lua.vim.treesitter.foldexpr()"
 vim.o.foldlevelstart = 99
-
--- vim.keymap.set('o', 'il', ':<c-u>normal! $v^<cr>', { silent = true, noremap = true })
--- vim.keymap.set('x', 'il', ':<c-u>normal! $v^<cr>', { silent = true, noremap = true })
--- vim.keymap.set('o', 'al', ':<c-u>normal! $v0<cr>', { silent = true, noremap = true })
--- vim.keymap.set('x', 'al', ':<c-u>normal! $v0<cr>', { silent = true, noremap = true })

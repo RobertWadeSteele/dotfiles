@@ -7,8 +7,6 @@ vim.keymap.set({ "n", "v" }, "<leader>c", "\"+c", { desc = "copy to clipboard" }
 vim.keymap.set({ "n", "v" }, "<leader>p", "\"+p", { desc = "paste from clipboard" })
 vim.keymap.set({ "n", "v" }, "<leader>p", "\"+P", { desc = "paste above from clipboard" })
 
-vim.keymap.set("n", "<M-j>", "<cmd>:cnext<cr>")
-vim.keymap.set("n", "<M-k>", "<cmd>:cprev<cr>")
 vim.keymap.set("n", "<C-n>", "<cmd>:cnext<cr>")
 vim.keymap.set("n", "<C-p>", "<cmd>:cprev<cr>")
 
