@@ -24,8 +24,8 @@ vim.o.timeoutlen = 300
 
 vim.o.completeopt = 'menuone,noselect'
 
--- vim.o.foldmethod = "indent"
--- vim.o.foldopen = "block"
+-- https://www.jackfranklin.co.uk/blog/code-folding-in-vim-neovim/
 vim.o.foldmethod = "expr"
 vim.o.foldexpr = "v:lua.vim.treesitter.foldexpr()"
 vim.o.foldlevelstart = 99
+vim.opt.foldtext = ""
