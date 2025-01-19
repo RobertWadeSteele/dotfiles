@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+COMMAND=${1}
+SESSION_PATH=$(tmux display-message -p -F "#{session_path}")
+
+POPUP_SESSION_NAME="${SESSION_PATH}_"${COMMAND}"popup"
+CURRENT_SESSION_NAME="$(tmux display-message -p -F "#{session_name}")"
+
+WIDTH=${2:-90%}
+HEIGHT=${2:-90%}
+
+if [[ "${CURRENT_SESSION_NAME}" =~ popup$ ]]; then
+    tmux detach-client
+fi
+
+if [ "${CURRENT_SESSION_NAME}" != "${POPUP_SESSION_NAME}" ]; then
+    tmux popup -w ${WIDTH} -h ${HEIGHT} -E "tmux attach -t ${POPUP_SESSION_NAME} || tmux new  -s ${POPUP_SESSION_NAME} ${@:1}"
+fi
