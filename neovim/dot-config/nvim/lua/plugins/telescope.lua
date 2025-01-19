@@ -22,14 +22,14 @@ return {
 			desc = "[S]earch [B]uffers",
 		},
 		{
-			"<leader>sS",
+			"<leader>s?",
 			function()
 				require("telescope.builtin").builtin()
 			end,
 			desc = "[S]earch [S]elect Telescope",
 		},
 		{
-			"<leader>gf",
+			"<leader>sc",
 			function()
 				require("telescope.builtin").git_files()
 			end,
@@ -106,7 +106,7 @@ return {
 			desc = "[G]oto [I]mplementation",
 		},
 		{
-			"<leader>D",
+			"gD",
 			function()
 				require("telescope.builtin").lsp_type_definitions()
 			end,
@@ -120,7 +120,7 @@ return {
 			desc = "[S]earch [S]ymbols",
 		},
 		{
-			"<leader>ws",
+			"<leader>sS",
 			function()
 				require("telescope.builtin").lsp_dynamic_workspace_symbols()
 			end,
