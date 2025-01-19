@@ -22,3 +22,6 @@ bind @ if-shell -F '#{!=:#{session_name},floating}' {
     run-shell 'bash -c "tmux break-pane -d -s floating -t \"$(tmux show -gvq '@last_session_name'):\""'
 }
 ```
+
+## Cool Tools
+https://dev.to/lissy93/cli-tools-you-cant-live-without-57f6
