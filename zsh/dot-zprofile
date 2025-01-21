@@ -13,4 +13,6 @@ command -v kubectl &> /dev/null && kubectl completion zsh > "$COMPLETION_PATH/_k
 command -v starship &> /dev/null && starship completions zsh > "$COMPLETION_PATH/_starship" && source <(starship init zsh)
 command -v cobra-cli &> /dev/null && cobra-cli completion zsh > "$COMPLETION_PATH/_cobra-cli"
 
+[ -f "/opt/1Password/op-ssh-sign" ] && ln -s "/opt/1Password/op-ssh-sign" "$HOME/.local/bin/op-ssh-sign"
+
 [ -f "$HOME/.cargo/env" ] && . "$HOME/.cargo/env"
