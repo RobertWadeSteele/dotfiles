@@ -1,12 +1,23 @@
 # echo .zshrc
-autoload -U edit-command-line
+autoload -Uz edit-command-line up-line-or-beginning-search down-line-or-beginning-search compinit
+
+compinit
+
 zle -N edit-command-line
+zle -N up-line-or-beginning-search
+zle -N down-line-or-beginning-search
+
 bindkey -e '^x^e' edit-command-line
+bindkey -e '^p' up-line-or-beginning-search
+bindkey -e '^n' down-line-or-beginning-search
 
-autoload -U compinit; compinit
-
-if command -v starship &> /dev/null; then
-	source <(starship init zsh)
+command -v direnv &> /dev/null && eval "$(direnv hook zsh)"
+command -v zoxide &> /dev/null && eval "$(zoxide init zsh)" && alias cd="z"
+command -v starship &> /dev/null && source <(starship init zsh)
+if command -v nvim &> /dev/null; then
+	alias vim="nvim"
+	export EDITOR="nvim"
+	export KUBE_EDITOR="nvim"
 fi
 
 if command -v fzf &> /dev/null; then
@@ -14,60 +25,22 @@ if command -v fzf &> /dev/null; then
 	export FZF_CTRL_T_OPTS="--preview 'bat -n --color=always --line-range :500 {}'"
 fi
 
-if command -v zoxide &> /dev/null; then
-	eval "$(zoxide init zsh)"
-	alias cd="z"
-fi
-
-# configure nvim specific aliases
-if command -v nvim &> /dev/null; then
-	alias vim="nvim"
-	export EDITOR="nvim"
-	export KUBE_EDITOR="nvim"
-fi
-
-function k9sviewall() {
-	tmux new-session -n Terminal -d -s K9SDashboard
-	kubectl config get-contexts | awk 'NR>1 {print $3}' |
-	while read -r cluster; do 
-		tmux new-window -n $cluster -d "k9s --cluster ${cluster}"
-	done
-	# tmux new-window -d "k9s --cluster gke_dev-unwired-264518_us-east1_dev-unwired-ui"
-	tmux attach-session -d -t K9SDashboard
-}
-
-export PATH=~/.cargo/bin:$PATH
-
-# add meteor to path
-export PATH=/Users/robertsteele/.meteor:$PATH
-export CLOUDSDK_PYTHON_SITEPACKAGES=1
+# export CLOUDSDK_PYTHON_SITEPACKAGES=1
 
 # add NVM to path
 export NVM_DIR="$HOME/.nvm" 
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-
-# arch aliases
-alias izsh="arch -x86_64 zsh"
+[ -s "$NVM_DIR/nvm.sh" ] && source "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && source "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
 # The next line updates PATH for the Google Cloud SDK.
-if [ -f '/Users/robertsteele/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/robertsteele/google-cloud-sdk/path.zsh.inc'; fi
+[ -f '/Users/robertsteele/google-cloud-sdk/path.zsh.inc' ] && . '/Users/robertsteele/google-cloud-sdk/path.zsh.inc'
 
 # The next line enables shell command completion for gcloud.
-if [ -f '/Users/robertsteele/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/robertsteele/google-cloud-sdk/completion.zsh.inc'; fi
+[ -f '/Users/robertsteele/google-cloud-sdk/completion.zsh.inc' ] && . '/Users/robertsteele/google-cloud-sdk/completion.zsh.inc'
 
 # bun
 export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
-[ -s "/Users/robertsteele/.bun/_bun" ] && source "/Users/robertsteele/.bun/_bun"
-
-# pyenv
-if command -v pyenv &> /dev/null; then
-	export PYENV_VIRTUALENV_DISABLE_PROMPT=1
-	export PYENV_ROOT="$HOME/.pyenv"
-	[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
-	eval "$(pyenv init -)"
-fi
 
 # aliases
 alias ls='ls --color=auto'
@@ -75,31 +48,3 @@ alias ll='ls -la'
 alias l.='ls -d .* --color=auto'
 
 alias ctoj="python -uc 'import csv, json, sys; sys.stdout.write(json.dumps([dict(r) for r in csv.DictReader(sys.stdin)]))'"
-
-alias deploydev='gh pr comment $(git rev-parse --abbrev-ref HEAD) --editor'
-
-# zsh parameter completion for the dotnet CLI
-
-_dotnet_zsh_complete()
-{
-  local completions=("$(dotnet complete "$words")")
-
-  # If the completion list is empty, just continue with filename selection
-  if [ -z "$completions" ]
-  then
-    _arguments '*::arguments: _normal'
-    return
-  fi
-
-  # This is not a variable assignment, don't remove spaces!
-  _values = "${(ps:\n:)completions}"
-}
-
-compdef _dotnet_zsh_complete dotnet
-
-if command -v direnv &> /dev/null; then
-	eval "$(direnv hook zsh)"
-fi
-. "/home/rob/.deno/env"
-# bun completions
-[ -s "/home/rob/.bun/_bun" ] && source "/home/rob/.bun/_bun"

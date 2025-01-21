@@ -3,12 +3,14 @@
 # https://github.com/tmux/tmux/wiki/Formats
 
 command=${1}
+[ -z "$command" ] && command="scratch"
 session_path=$(tmux display-message -p -F "#{session_path}")
+session_path=$(basename "$session_path" | tr . _)
 
-popup_session_name="${session_path}_"${command}"popup"
+popup_session_name="${session_path}__popup__"${command}""
 current_session_name="$(tmux display-message -p -F "#{session_name}")"
 
-if [[ "${current_session_name}" =~ popup$ ]]; then
+if [[ "${current_session_name}" =~ .*_popup_.* ]]; then
     tmux detach-client
 fi
 
