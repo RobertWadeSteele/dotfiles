@@ -1,1 +1,1 @@
-export PATH="$PATH:/Users/robertsteele/.dotnet/tools:${HOME}/.local/bin:${HOME}/.cargo/bin:${HOME}/.meteor"
+export PATH="$PATH:/Users/robertsteele/.dotnet/tools:${HOME}/.local/bin:${HOME}/.cargo/bin:${HOME}/.meteor:/opt/homebrew/bin"
