@@ -15,5 +15,7 @@ if [[ "${current_session_name}" =~ .*_popup_.* ]]; then
 fi
 
 if [ "${current_session_name}" != "${popup_session_name}" ]; then
-    tmux popup -w "90%" -h "90%" -E "tmux attach -t ${popup_session_name} || tmux new  -s ${popup_session_name} ${@:1}"
+    tmux has-session -t ${popup_session_name} 2> /dev/null || tmux new -d -s ${popup_session_name} ${@:1}
+    tmux set-hook -t ${current_session_name} session-closed "kill-session ${popup_session_name}"
+    tmux popup -w "90%" -h "90%" -E "tmux attach -t ${popup_session_name}"
 fi
