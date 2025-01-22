@@ -10,7 +10,7 @@ return {
 	},
 	keys = {
 		{
-			"<leader>f",
+			"<leader>j",
 			":HopChar2<CR>",
 			desc = "[H]op",
 		},

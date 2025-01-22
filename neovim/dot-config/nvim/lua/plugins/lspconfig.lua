@@ -5,6 +5,7 @@ return {
 
 	opts = {
 		servers = {
+			terraformls = {},
 			basedpyright = {},
 			ruff = {},
 			clangd = {},
@@ -19,7 +20,7 @@ return {
 			},
 			html = { filetypes = { "html", "twig", "hbs", "templ" } },
 			-- htmx = { filetypes = { "html", "templ" } },
-			tailwindcss = { filetypes = { "html", "templ", "typescriptreact", "javascriptreact" } },
+			-- tailwindcss = { filetypes = { "html", "templ", "typescriptreact", "javascriptreact" } },
 			csharp_ls = {},
 			lua_ls = {
 				settings = {

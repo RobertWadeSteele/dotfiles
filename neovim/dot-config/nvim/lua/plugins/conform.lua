@@ -4,6 +4,7 @@ return {
 	"stevearc/conform.nvim",
 	opts = {
 		formatters_by_ft = {
+			terraform = { "terraform_fmt" },
 			html = { "prettierd" },
 			javascript = { "prettierd" },
 			typescript = { "prettierd" },
@@ -20,7 +21,7 @@ return {
 	},
 	keys = {
 		{
-			"<leader>cf",
+			"<leader>f",
 			function()
 				require("conform").format()
 			end,
