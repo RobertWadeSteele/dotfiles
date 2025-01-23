@@ -3,11 +3,15 @@
 if [[ $# -eq 1 ]]; then
     selected=$1
 else
-    selected=$(find ~ ~/workspace ~/workspace/python ~/workspace/go ~/workspace/javascript ~/workspace/dotnet ~/PycharmProjects ~/WebstormProjects -mindepth 1 -maxdepth 1 -type d 2> /dev/null | fzf)
+    selected=$(find ~ ~/workspace ~/workspace/python ~/workspace/go ~/workspace/javascript ~/workspace/dotnet ~/PycharmProjects ~/WebstormProjects -mindepth 1 -maxdepth 1 -type d 2> /dev/null | fzf --tmux bottom)
 fi
 
 if [[ -z $selected ]]; then
     exit 0
+fi
+
+if [ $selected = "." ]; then
+    selected=$(pwd)
 fi
 
 selected_name=$(basename "$selected" | tr . _)

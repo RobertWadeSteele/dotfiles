@@ -12,6 +12,7 @@ command -v brew &> /dev/null && eval $(brew shellenv)
 command -v kubectl &> /dev/null && kubectl completion zsh > "$COMPLETION_PATH/_kubectl"
 command -v starship &> /dev/null && starship completions zsh > "$COMPLETION_PATH/_starship" && source <(starship init zsh)
 command -v cobra-cli &> /dev/null && cobra-cli completion zsh > "$COMPLETION_PATH/_cobra-cli"
+command -v docker &> /dev/null && docker completion zsh > "$COMPLETION_PATH/_docker"
 
 [ -f "/opt/1Password/op-ssh-sign" ] && ln -s "/opt/1Password/op-ssh-sign" "$HOME/.local/bin/op-ssh-sign"
 
