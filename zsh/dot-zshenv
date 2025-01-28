@@ -1,1 +1,5 @@
 export PATH="$PATH:/Users/robertsteele/.dotnet/tools:${HOME}/.local/bin:${HOME}/.cargo/bin:${HOME}/.meteor:/opt/homebrew/bin"
+
+# Begin added by argcomplete
+fpath=( /Users/robertsteele/workspace/universe-estimates/.venv/lib/python3.13/site-packages/argcomplete/bash_completion.d "${fpath[@]}" )
+# End added by argcomplete

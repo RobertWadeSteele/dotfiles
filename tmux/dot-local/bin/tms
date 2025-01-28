@@ -1,29 +1,19 @@
 #!/usr/bin/env bash
 
-if [[ $# -eq 1 ]]; then
-    selected=$1
+if [ "$selected_path" = "." ]; then
+    selected_path=$(pwd)
 else
-    selected=$(find ~ ~/workspace ~/workspace/python ~/workspace/go ~/workspace/javascript ~/workspace/dotnet ~/PycharmProjects ~/WebstormProjects -mindepth 1 -maxdepth 1 -type d 2> /dev/null | fzf --tmux bottom)
+    selected_path=$(find ~ ~/workspace ~/workspace/python ~/workspace/go ~/workspace/javascript ~/workspace/dotnet ~/PycharmProjects ~/WebstormProjects -mindepth 1 -maxdepth 1 -type d 2> /dev/null | fzf --tmux bottom --select-1 --query="${@:1}")
 fi
 
-if [[ -z $selected ]]; then
+if [[ -z $selected_path ]]; then
     exit 0
 fi
 
-if [ $selected = "." ]; then
-    selected=$(pwd)
+# selected_name=$(basename "$selected_path" | tr . _)
+
+if ! tmux has-session -t="$selected_path" 2> /dev/null; then
+    tmux new-session -ds "$selected_path" -c "$selected_path"
 fi
 
-selected_name=$(basename "$selected" | tr . _)
-tmux_running=$(pgrep tmux)
-
-if [[ -z $TMUX ]] && [[ -z $tmux_running ]]; then
-    tmux new-session -s $selected_name -c $selected
-    exit 0
-fi
-
-if ! tmux has-session -t=$selected_name 2> /dev/null; then
-    tmux new-session -ds $selected_name -c $selected
-fi
-
-tmux switch-client -t $selected_name 2> /dev/null || tmux attach-session -t $selected_name
+tmux switch-client -t "$selected_path" &> /dev/null || tmux attach-session -t "$selected_path"

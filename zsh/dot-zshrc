@@ -1,4 +1,3 @@
-# echo .zshrc
 autoload -Uz edit-command-line up-line-or-beginning-search down-line-or-beginning-search compinit
 
 compinit
@@ -11,19 +10,34 @@ bindkey -e '^x^e' edit-command-line
 bindkey -e '^p' up-line-or-beginning-search
 bindkey -e '^n' down-line-or-beginning-search
 
-command -v direnv &> /dev/null && eval "$(direnv hook zsh)"
-command -v zoxide &> /dev/null && eval "$(zoxide init zsh)" && alias cd="z"
-command -v starship &> /dev/null && source <(starship init zsh)
-if command -v nvim &> /dev/null; then
-	alias vim="nvim"
-	export EDITOR="nvim"
-	export KUBE_EDITOR="nvim"
-fi
+eval "$(direnv hook zsh)"
+eval "$(zoxide init zsh)"
+source <(starship init zsh)
 
-if command -v fzf &> /dev/null; then
-	source <(fzf --zsh)
-	export FZF_CTRL_T_OPTS="--preview 'bat -n --color=always --line-range :500 {}'"
-fi
+export EDITOR="nvim"
+export KUBE_EDITOR="nvim"
+
+source <(fzf --zsh)
+
+export FZF_DEFAULT_COMMAND="fd --hidden --strip-cwd-prefix --exclude .git"
+export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+export FZF_CTRL_T_OPTS="--preview 'bat -n --color=always --line-range :500 {}'"
+export FZF_ALT_C_COMMAND="fd --type=d --hidden --strip-cwd-prefix --exclude .git"
+
+_fzf_compgen_path() {
+	fd --hidden --exclude .git . "$1"
+}
+
+_fzf_compgen_dir() {
+	fd --type=d --hidden --exclude .git . "$1"
+}
+
+# bat
+export BAT_THEME=tokyonight_night
+
+# eza
+alias ls="eza --color=always --git --no-filesize --no-time --no-user --no-permissions"
+alias ll="eza --color=always --git --icons=always"
 
 # export CLOUDSDK_PYTHON_SITEPACKAGES=1
 
@@ -43,8 +57,19 @@ export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
 
 # aliases
-alias ls='ls --color=auto'
-alias ll='ls -la'
-alias l.='ls -d .* --color=auto'
+# alias ls='ls --color=auto'
+# alias ll='ls -la'
+# alias l.='ls -d .* --color=auto'
+
+alias cd="z"
 
 alias ctoj="python -uc 'import csv, json, sys; sys.stdout.write(json.dumps([dict(r) for r in csv.DictReader(sys.stdin)]))'"
+
+# bun completions
+[ -s "/Users/robertsteele/.bun/_bun" ] && source "/Users/robertsteele/.bun/_bun"
+
+# vi: ft=zsh
+
+fpath+=~/.zfunc; autoload -Uz compinit; compinit
+
+zstyle ':completion:*' menu select

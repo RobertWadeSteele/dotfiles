@@ -2,22 +2,27 @@
 # https://blog.meain.io/2020/tmux-flating-scratch-terminal/
 # https://github.com/tmux/tmux/wiki/Formats
 
-command=${1}
-[ -z "$command" ] && command="scratch"
-session_path=$(tmux display-message -p -F "#{session_path}")
-session_path=$(basename "$session_path" | tr . _)
+command=${@:1}
 
-popup_session_name="${session_path}__popup__"${command}""
-current_session_name="$(tmux display-message -p -F "#{session_name}")"
-
-if [[ "${current_session_name}" =~ .*_popup_.* ]]; then
+session_name="$(tmux display-message -p -F '#{session_name}')"
+if [[ "${session_name}" =~ (.*)__popup__.*  ]]; then
     tmux detach-client
+    session_name="${BASH_REMATCH[1]}"
 fi
 
-if [ "${current_session_name}" != "${popup_session_name}" ]; then
-    tmux has-session -t ${popup_session_name} 2> /dev/null || \
-        tmux new -d -s ${popup_session_name} ${@:1} && \
-        tmux set-hook -g session-closed "run-shell \"[ \$(tmux display-message -p -F '#{hook_session_name}') = ${current_session_name} ] && tmux kill-session -t ${popup_session_name} \""
-        # tmux set-hook -g session-closed 'run-shell "[ tmux display-message -p -F "#{hook_session_name}" = "${current_session_name}" ] && tmux kill-session -t "${popup_session_name}""'
-    tmux popup -w "90%" -h "90%" -E "tmux attach -t ${popup_session_name}"
+if [ -z "${command}" ]; then
+    # https://github.com/junegunn/fzf/issues/1693#issuecomment-699642792 --bind=enter:replace-query+print-query
+    popup_session_name="$(tmux list-sessions -F '#{session_name}' | grep "${session_name}__popup__" | fzf --tmux bottom --bind=enter:replace-query+print-query --bind=ctrl-space:print-query -q "${session_name}__popup__")"
+else
+    popup_session_name="${session_name}__popup__${command}"
 fi
+
+if [ -z "${popup_session_name}" ]; then
+    exit 0
+fi
+
+tmux new-session -d -s "${popup_session_name}" ${command} && \
+    tmux set-hook -g session-closed "run-shell \"[ \$(tmux display-message -p -F '#{hook_session_name}') = ${session_name} ] && tmux kill-session -t ${popup_session_name}\""
+
+tmux display-popup -w "90%" -h "90%" -E "tmux attach-session -t ${popup_session_name}"
+

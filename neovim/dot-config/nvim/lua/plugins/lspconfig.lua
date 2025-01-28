@@ -59,6 +59,15 @@ return {
 		{ "saghen/blink.cmp" },
 
 		{
+			"williamboman/mason.nvim",
+			opts = {},
+		},
+		{
+			"williamboman/mason-lspconfig.nvim",
+			opts = {},
+		},
+
+		{
 			"j-hui/fidget.nvim",
 
 			---@module 'fidget.options'
