@@ -5,9 +5,9 @@
 command=${@:1}
 
 session_name="$(tmux display-message -p -F '#{session_name}')"
-if [[ "${session_name}" =~ (.*)__popup__.*  ]]; then
+if [[ "${session_name}" =~ .*__popup__.*  ]]; then
     tmux detach-client
-    session_name="${BASH_REMATCH[1]}"
+    exit 0
 fi
 
 if [ -z "${command}" ]; then
