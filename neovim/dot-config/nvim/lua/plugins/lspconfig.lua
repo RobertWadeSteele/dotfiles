@@ -5,6 +5,7 @@ return {
 
 	opts = {
 		servers = {
+			sqls = {},
 			terraformls = {},
 			basedpyright = {},
 			ruff = {},
@@ -12,6 +13,7 @@ return {
 			gopls = {},
 			templ = {},
 			jsonls = {},
+			yamlls = {},
 			emmet_language_server = { filetypes = { "html", "templ", "typescriptreact", "javascriptreact" } },
 			rust_analyzer = {},
 			ts_ls = {
@@ -47,9 +49,31 @@ return {
 		for server_name, server_options in pairs(opts.servers) do
 			local capabilities = blink.get_lsp_capabilities((server_options or {}).capabilities)
 
-			local config = {
+			local config = vim.tbl_deep_extend("error", server_options, {
 				capabilities = capabilities,
-			}
+			})
+
+			if server_name == "jsonls" then
+				config = vim.tbl_deep_extend("error", config, {
+					settings = {
+						json = {
+							schemas = require("schemastore").json.schemas(),
+							validate = { enable = true },
+						},
+					},
+				})
+			end
+
+			if server_name == "yamlls" then
+				config = vim.tbl_deep_extend("error", config, {
+					settings = {
+						yaml = {
+							schemastore = { enable = false, url = "" },
+							schemas = require("schemastore").yaml.schemas(),
+						},
+					},
+				})
+			end
 
 			lspconfig[server_name].setup(config)
 		end
@@ -57,6 +81,8 @@ return {
 
 	dependencies = {
 		{ "saghen/blink.cmp" },
+
+		{ "b0o/schemastore.nvim" },
 
 		{
 			"williamboman/mason.nvim",

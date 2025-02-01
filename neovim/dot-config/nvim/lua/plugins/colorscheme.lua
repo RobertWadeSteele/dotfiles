@@ -6,11 +6,11 @@ return {
 	priority = 1000,
 	config = function(opts)
 		require("tokyonight").setup({
-			transparent = true,
-			styles = {
-				sidebars = "transparent",
-				floats = "transparent",
-			},
+			-- transparent = true,
+			-- styles = {
+			-- 	sidebars = "transparent",
+			-- 	floats = "transparent",
+			-- },
 			dim_inactive = true,
 		})
 		vim.o.termguicolors = true

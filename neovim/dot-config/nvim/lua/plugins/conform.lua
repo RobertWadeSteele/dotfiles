@@ -17,6 +17,7 @@ return {
 			go = { "gofmt" },
 			templ = { "templ", "fm" },
 			cs = { "csharpier" },
+			sql = { "sql_formatter" },
 		},
 	},
 	keys = {
