@@ -1,11 +1,11 @@
 vim.keymap.set("i", "jj", "<Esc>")
 vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
 
-vim.keymap.set({ "n", "v" }, "<leader>y", "\"+y", { desc = "yank to clipboard" })
-vim.keymap.set({ "n", "v" }, "<leader>d", "\"+d", { desc = "delete to clipboard" })
-vim.keymap.set({ "n", "v" }, "<leader>c", "\"+c", { desc = "copy to clipboard" })
-vim.keymap.set({ "n", "v" }, "<leader>p", "\"+p", { desc = "paste from clipboard" })
-vim.keymap.set({ "n", "v" }, "<leader>p", "\"+P", { desc = "paste above from clipboard" })
+-- vim.keymap.set({ "n", "v" }, "<leader>y", "\"+y", { desc = "yank to clipboard" })
+-- vim.keymap.set({ "n", "v" }, "<leader>d", "\"+d", { desc = "delete to clipboard" })
+-- vim.keymap.set({ "n", "v" }, "<leader>c", "\"+c", { desc = "copy to clipboard" })
+-- vim.keymap.set({ "n", "v" }, "<leader>p", "\"+p", { desc = "paste from clipboard" })
+-- vim.keymap.set({ "n", "v" }, "<leader>p", "\"+P", { desc = "paste above from clipboard" })
 
 vim.keymap.set("n", "<C-n>", "<cmd>:cnext<cr>")
 vim.keymap.set("n", "<C-p>", "<cmd>:cprev<cr>")

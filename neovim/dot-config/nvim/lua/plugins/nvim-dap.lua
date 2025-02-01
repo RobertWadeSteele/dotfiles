@@ -11,14 +11,13 @@ return {
 	end,
 	keys = {
 		{
-			"<leader>rc",
+			"<F1>",
 			function()
 				require("dap").continue()
 			end,
-			desc = "[C]ontinue",
 		},
 		{
-			"<leader>rC",
+			"<A-F1>",
 			function()
 				require("dap").continue({
 					before = function(config)
@@ -29,52 +28,53 @@ return {
 			end,
 		},
 		{
-			"<leader>ri",
+			"<F2>",
 			function()
 				require("dap").step_into()
 			end,
-			desc = "Step [O]ver",
 		},
 		{
-			"<leader>ro",
+			"<F3>",
 			function()
 				require("dap").step_over()
 			end,
-			desc = "Step [O]ver",
 		},
 		{
-			"<leader>rO",
+			"<F4>",
 			function()
 				require("dap").step_out()
 			end,
-			desc = "Step [O]ver",
 		},
 		{
-			"<leader>rT",
+			"<F7>",
 			function()
 				require("dap").terminate()
 			end,
-			desc = "Step [O]ver",
 		},
 		{
-			"<leader>rb",
+			"<leader>b",
 			function()
 				require("dap").toggle_breakpoint()
 			end,
-			desc = "Toggle [B]reakpoint",
+			desc = "breakpoint",
 		},
 		{
-			"<leader>rB",
+			"<leader>B",
 			function()
+				--- @type string | nil
 				local condition = vim.fn.input("Condition: ")
+				--- @type string | nil
 				local hit_count = vim.fn.input("Hit count: ")
+				--- @type string | nil
 				local log_message = vim.fn.input("Log message: ")
+
 				condition = condition ~= "" and condition or nil
 				hit_count = hit_count ~= "" and hit_count or nil
 				log_message = log_message ~= "" and log_message or nil
+
 				require("dap").set_breakpoint(condition, hit_count, log_message)
 			end,
-			desc = "Conditional [B]reakpoint",
+			desc = "conditional breakpoint",
 		},
 	},
 }

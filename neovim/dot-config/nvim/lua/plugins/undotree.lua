@@ -6,7 +6,7 @@ return {
 	opts = {},
 	keys = {
 		{
-			"<leader><leader>u",
+			"<leader>u",
 			function()
 				require("undotree").toggle()
 			end,

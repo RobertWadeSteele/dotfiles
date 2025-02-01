@@ -5,43 +5,31 @@ return {
 	dependencies = {
 		"mfussenegger/nvim-dap",
 	},
-	event = "BufRead *.py",
+	event = "BufReadPre",
+	ft = "python",
 	keys = {
 		{
-			"<leader>rv",
-			function()
-				require("dap-python").debug_selection()
-			end,
-			desc = "Debug selection",
+			"<leader>de",
+			"<ESC>:lua require('dap-python').debug_selection()<CR>",
+			desc = "eval selection",
 			ft = "python",
 			mode = "v",
 		},
 		{
-			"<leader>tm",
-			function()
-				require("dap-python").test_method()
-			end,
-			desc = "Test method",
+			"<leader>dm",
+			":lua require('dap-python').test_method()",
+			desc = "test method",
 			ft = "python",
 		},
 		{
-			"<leader>tc",
-			function()
-				require("dap-python").test_class()
-			end,
-			desc = "Test class",
+			"<leader>dc",
+			":lua require('dap-python').test_class()",
+			desc = "test class",
 			ft = "python",
 		},
 	},
 	config = function()
-		local venv_path = os.getenv("VIRTUAL_ENV")
-		if venv_path == nil then
-			print("no active virtual environment - unable to activate python dap")
-			return
-		end
-
-		local python_path = venv_path .. "/bin/python"
-
-		require("dap-python").setup(python_path, { include_configs = false })
+		require("dap-python").setup("uv")
+		-- require("dap-python").setup("uv", { include_configs = false })
 	end,
 }

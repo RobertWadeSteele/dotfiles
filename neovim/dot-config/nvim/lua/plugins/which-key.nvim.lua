@@ -5,14 +5,13 @@ return {
 
 	config = function()
 		require("which-key").add({
-			{ "<leader>c", group = "[C]ode" },
-			{ "<leader>g", group = "[G]it" },
-			{ "<leader>gt", group = "[T]oggle" },
-			{ "<leader>h", group = "[H]arpoon" },
-			{ "<leader>r", group = "[R]un" },
-			{ "<leader>s", group = "[S]earch" },
-			{ "<leader>w", group = "[W]orkspace" },
-			{ "<leader>l", group = "[L]SP" },
+			{ "<leader>c", group = "Code" },
+			{ "<leader>g", group = "Git" },
+			{ "<leader>gt", group = "Toggle" },
+			{ "<leader>d", group = "DAP" },
+			{ "<leader>s", group = "Search" },
+			{ "<leader>w", group = "Workspace" },
+			{ "<leader>l", group = "LSP" },
 			{ "<leader>", desc = "VISUAL <leader>", mode = "v" },
 		})
 	end,

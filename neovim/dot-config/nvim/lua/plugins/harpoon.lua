@@ -5,32 +5,32 @@ return {
 	opts = {},
 	keys = {
 		{
-			"<leader>hm",
+			"m<leader>",
 			function()
 				require("harpoon.mark").add_file()
 			end,
-			desc = "[M]ark file",
+			desc = "Mark file",
 		},
 		{
-			"<leader>hh",
+			"<leader>h",
 			function()
 				require("harpoon.ui").toggle_quick_menu()
 			end,
-			desc = "[O]pen [H]arpoon",
+			desc = "Open Harpoon",
 		},
 		{
-			"[h",
+			"<A-p>",
 			function()
 				require("harpoon.ui").nav_prev()
 			end,
-			desc = "[H]arpoon Next",
+			desc = "Harpoon Next",
 		},
 		{
-			"]h",
+			"<A-n>",
 			function()
 				require("harpoon.ui").nav_next()
 			end,
-			desc = "[H]arpoon Prev",
+			desc = "Harpoon Prev",
 		},
 	},
 }
