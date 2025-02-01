@@ -14,6 +14,4 @@ command -v starship &> /dev/null && starship completions zsh > "$COMPLETION_PATH
 command -v cobra-cli &> /dev/null && cobra-cli completion zsh > "$COMPLETION_PATH/_cobra-cli"
 command -v docker &> /dev/null && docker completion zsh > "$COMPLETION_PATH/_docker"
 
-[ -f "/opt/1Password/op-ssh-sign" ] && ln -s "/opt/1Password/op-ssh-sign" "$HOME/.local/bin/op-ssh-sign"
-
 [ -f "$HOME/.cargo/env" ] && . "$HOME/.cargo/env"

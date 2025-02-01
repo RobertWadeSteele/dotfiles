@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+selected_path="$1"
+
 if [ "$selected_path" = "." ]; then
     selected_path=$(pwd)
 else
