@@ -23,6 +23,12 @@ export FZF_DEFAULT_COMMAND="fd --hidden --strip-cwd-prefix --exclude .git"
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 export FZF_CTRL_T_OPTS="--preview 'bat -n --color=always --line-range :500 {}'"
 export FZF_ALT_C_COMMAND="fd --type=d --hidden --strip-cwd-prefix --exclude .git"
+export FZF_DEFAULT_OPTS=" \
+--color=bg+:#313244,bg:#1e1e2e,spinner:#f5e0dc,hl:#f38ba8 \
+--color=fg:#cdd6f4,header:#f38ba8,info:#cba6f7,pointer:#f5e0dc \
+--color=marker:#b4befe,fg+:#cdd6f4,prompt:#cba6f7,hl+:#f38ba8 \
+--color=selected-bg:#45475a \
+--multi"
 
 _fzf_compgen_path() {
 	fd --hidden --exclude .git . "$1"
@@ -33,7 +39,8 @@ _fzf_compgen_dir() {
 }
 
 # bat
-export BAT_THEME=tokyonight_night
+# export BAT_THEME=tokyonight_night
+export MANPAGER="sh -c 'sed -u -e \"s/\\x1B\[[0-9;]*m//g; s/.\\x08//g\" | bat -p -lman'"
 
 # eza
 alias ls="eza --color=always --git --no-filesize --no-time --no-user --no-permissions"

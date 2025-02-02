@@ -16,13 +16,13 @@ return {
 			mode = "v",
 		},
 		{
-			"<leader>dm",
+			"<leader>dM",
 			":lua require('dap-python').test_method()",
 			desc = "test method",
 			ft = "python",
 		},
 		{
-			"<leader>dc",
+			"<leader>dC",
 			":lua require('dap-python').test_class()",
 			desc = "test class",
 			ft = "python",
@@ -30,6 +30,5 @@ return {
 	},
 	config = function()
 		require("dap-python").setup("uv")
-		-- require("dap-python").setup("uv", { include_configs = false })
 	end,
 }
