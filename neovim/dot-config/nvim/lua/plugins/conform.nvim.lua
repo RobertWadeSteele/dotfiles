@@ -18,6 +18,7 @@ return {
 			templ = { "templ", "fm" },
 			cs = { "csharpier" },
 			sql = { "sql_formatter" },
+			nix = { "nixfmt", "nixpkgs_fmt"}
 		},
 	},
 	keys = {

@@ -1,0 +1,11 @@
+#!/bin/bash
+
+printf "LOADING DOTFILES...\n Current directory is $(pwd)\n"
+
+stow alacritty bash bat git k9s lazygit neovim tmux zsh nix
+
+printf "FINISHED STOW...\n"
+
+nix-env -iA nixpkgs.devpodPackages
+
+printf "FINISHED STOW...\n"
