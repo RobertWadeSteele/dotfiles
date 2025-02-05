@@ -20,3 +20,9 @@
 [user]
     name = Robert Steele
     email = robert.wade.steele@gmail.com
+
+[commit]
+    gpgsign = true
+
+[tag]
+    gpgsign = true
