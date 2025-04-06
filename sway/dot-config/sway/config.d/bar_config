@@ -1,3 +1,4 @@
+# vim:set ft=swayconfig
 # bar
 bar {
   position top

@@ -1,1 +1,2 @@
+# vim:set ft=swayconfig
 exec --no-startup-id redshift
