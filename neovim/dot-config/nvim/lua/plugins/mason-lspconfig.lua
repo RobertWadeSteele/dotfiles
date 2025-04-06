@@ -9,14 +9,32 @@ local function call_setup(name, config)
 end
 
 local server_options = {
-	emmet_language_server = { filetypes = { "html", "templ", "typescriptreact", "javascriptreact" } },
+	emmet_language_server = {
+		filetypes = { "html", "templ", "typescriptreact", "javascriptreact", "elixir", "heex", "eelixir" },
+		init_options = {
+			userLanguages = {
+				elixir = "html-eex",
+				eelixir = "html-eex",
+				heex = "html-eex",
+			},
+		},
+	},
 	ts_ls = {
 		filetypes = { "javascript", "typescript", "typescriptreact", "javascriptreact" },
 		single_file_support = false,
 	},
 	html = { filetypes = { "html", "twig", "hbs", "templ" } },
 	-- htmx = { filetypes = { "html", "templ" } },
-	tailwindcss = { filetypes = { "html", "templ", "typescriptreact", "javascriptreact" } },
+	tailwindcss = {
+		filetypes = { "html", "templ", "typescriptreact", "javascriptreact", "elixir", "eelixir", "heex" },
+		init_options = {
+			userLanguages = {
+				elixir = "html-eex",
+				eelixir = "html-eex",
+				heex = "html-eex",
+			},
+		},
+	},
 	lua_ls = {
 		settings = {
 			Lua = {

@@ -18,7 +18,10 @@ return {
 			templ = { "templ", "fm" },
 			cs = { "csharpier" },
 			sql = { "sql_formatter" },
-			nix = { "nixfmt", "nixpkgs_fmt"}
+			nix = { "nixfmt", "nixpkgs_fmt" },
+			elixir = { lsp_format = "always" },
+			heex = { lsp_format = "always" },
+			eex = { lsp_format = "always" },
 		},
 	},
 	keys = {

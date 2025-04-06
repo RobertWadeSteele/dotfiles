@@ -22,6 +22,9 @@ return {
 				"vimdoc",
 				"vim",
 				"bash",
+				"elixir",
+				"heex",
+				"eex",
 			},
 
 			auto_install = false,
