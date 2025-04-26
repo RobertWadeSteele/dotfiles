@@ -2,10 +2,16 @@
 ---@type LazySpec
 return {
 	"ThePrimeagen/harpoon",
-	opts = {},
+	config = function()
+		require("harpoon").setup()
+		require("telescope").load_extension("harpoon")
+	end,
+	dependencies = {
+		{ "nvim-telescope/telescope.nvim" },
+	},
 	keys = {
 		{
-			"m<leader>",
+			"<leader>m",
 			function()
 				require("harpoon.mark").add_file()
 			end,
@@ -31,6 +37,11 @@ return {
 				require("harpoon.ui").nav_next()
 			end,
 			desc = "Harpoon Prev",
+		},
+		{
+			"<leader>sh",
+			":Telescope harpoon marks<CR>",
+			desc = "search marks",
 		},
 	},
 }

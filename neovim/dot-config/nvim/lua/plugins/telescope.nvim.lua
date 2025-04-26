@@ -43,7 +43,7 @@ return {
 			desc = "[S]earch [F]iles",
 		},
 		{
-			"<leader>sh",
+			"<leader>sH",
 			function()
 				require("telescope.builtin").help_tags()
 			end,
