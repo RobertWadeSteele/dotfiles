@@ -3,8 +3,10 @@
 return {
 	"stevearc/conform.nvim",
 	opts = {
+		lsp_format = "fallback",
 		formatters_by_ft = {
 			terraform = { "terraform_fmt" },
+			["terraform-vars"] = { "terraform_fmt" },
 			html = { "prettierd" },
 			javascript = { "prettierd" },
 			typescript = { "prettierd" },
@@ -12,7 +14,7 @@ return {
 			typescriptreact = { "prettierd" },
 			toml = { lsp_format = "always" },
 			json = { "prettierd" },
-			python = { "ruff_format", lsp_format = "fallback" },
+			python = { "ruff_format" },
 			lua = { "stylua" },
 			go = { "gofmt" },
 			templ = { "templ", "fm" },
@@ -22,7 +24,10 @@ return {
 			elixir = { lsp_format = "always" },
 			heex = { lsp_format = "always" },
 			eex = { lsp_format = "always" },
+			nix = { "nixfmt", "nixpkgs_fmt"},
+			perl = { lsp_format = "always" },
 		},
+		debug = true,
 	},
 	keys = {
 		{
