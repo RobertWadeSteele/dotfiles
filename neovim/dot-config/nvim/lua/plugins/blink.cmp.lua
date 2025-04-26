@@ -46,9 +46,14 @@ return {
 				selection = { preselect = true, auto_insert = false },
 			},
 
-			-- accept = {
-			-- 	auto_brackets = { kind_resolution = { lua = "tru" } },
-			-- },
+			documentation = {
+				auto_show = false,
+				-- auto_show_delay_ms = 500,
+			},
+
+			accept = {
+				auto_brackets = { enabled = false, kind_resolution = { enabled = true } },
+			},
 
 			menu = {
 				draw = {
