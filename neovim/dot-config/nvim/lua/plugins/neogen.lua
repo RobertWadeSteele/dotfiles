@@ -6,6 +6,6 @@ return {
 	-- Uncomment next line if you want to follow only stable versions
 	-- version = "*"
 	keys = {
-		{ "<leader>cd", ":Neogen<CR>", desc = "Generate documentation" },
+		{ "<leader>ld", ":Neogen<CR>", desc = "Generate documentation" },
 	},
 }
